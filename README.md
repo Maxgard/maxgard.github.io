@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>be1.ru</title>
+	
 </head>
 <body>
 
