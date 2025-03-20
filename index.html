@@ -104,9 +104,20 @@
     </p>
     <br>
     <p style="text-align:center">
-      <a href="https://vk.com/away.php?to=https://1go-irrs01.com/c92683723" target="_blank">
-        <img alt="Занести" src="https://png.pngtree.com/png-clipart/20220726/original/pngtree-go-button-green-png-image_8411143.png" style="height:100px; width:100px;" />
-      </a>
+      <a href="#" onclick="openLink('https://vk.com/away.php?to=https://1go-irrs01.com/c92683723')">
+    <img alt="Занести" src="https://png.pngtree.com/png-clipart/20220726/original/pngtree-go-button-green-png-image_8411143.png" style="height:100px; width:100px;" />
+</a>
+
+<script>
+    function openLink(url) {
+        if (window.Telegram && window.Telegram.WebApp) {
+            Telegram.WebApp.openLink(url);  // Открывает ссылку в браузере телефона
+        } else {
+            window.open(url, '_blank');  // Стандартный способ для десктопа или других случаев
+        }
+    }
+</script>
+
     </p>
   </div>
 </body>
