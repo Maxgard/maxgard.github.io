@@ -39,9 +39,9 @@
     }
 
     .image-container {
+      position: relative;
       width: 100%;
-      height: auto;
-      margin-bottom: 20px;
+      height: 300px;
       overflow: hidden;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -49,21 +49,24 @@
 
     .image {
       width: 100%;
-      height: 300px;
+      height: 100%;
       object-fit: cover;
-      animation: spinScale 8s infinite;
     }
 
-    @keyframes spinScale {
-      0% {
-        transform: scale(1) rotate(0deg);
-      }
-      50% {
-        transform: scale(1.1) rotate(180deg);
-      }
-      100% {
-        transform: scale(1) rotate(360deg);
-      }
+    .shine {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(115deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 100%);
+      animation: shineEffect 5s infinite;
+    }
+
+    @keyframes shineEffect {
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: -100%; }
     }
 
     a img {
@@ -91,6 +94,7 @@
     <h1>А ТЫ ГОТОВ ЗАНОСИТЬ?</h1>
     <div class="image-container">
       <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Пример изображения" class="image">
+      <div class="shine"></div>
     </div>
     <p><strong>№32. ПРОВЕРЕННЫЙ Сайт с Казино - </strong>
       <a href="https://1go-irrs01.com/c92683723" rel="noopener nofollow" target="_blank">
