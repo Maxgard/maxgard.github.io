@@ -3,122 +3,129 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Топ Казино</title>
+  <title>Агрегатор Казино</title>
   <style>
-    /* Основные стили для страницы */
-    * {
+    body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      background: #f4f4f4;
+      font-family: 'Arial', sans-serif;
     }
-
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #e5e5e5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-
     .container {
-      text-align: center;
-      background-color: #ffffff;
-      border-radius: 10px;
+      max-width: 600px;
+      margin: 0 auto;
       padding: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 350px;
     }
-
-    h1 {
-      font-size: 1.5rem;
-      color: #0088cc;
-      margin-bottom: 20px;
+    .casino-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 15px;
     }
-
-    .image-container {
-      position: relative;
-      width: 100%;
-      height: 300px;
-      overflow: hidden;
+    .casino-card {
+      background: #fff;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
     }
-
-    .image {
+    .casino-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .casino-image {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: 100px;
+      background: url('https://via.placeholder.com/150') center/cover no-repeat;
+      transition: opacity 0.3s;
     }
-
-    .shine {
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 200%;
-      height: 100%;
-      background: linear-gradient(115deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 100%);
-      animation: shineEffect 5s infinite;
+    .casino-card:hover .casino-image {
+      opacity: 0.85;
     }
-
-    @keyframes shineEffect {
-      0% { left: -100%; }
-      50% { left: 100%; }
-      100% { left: -100%; }
+    .casino-content {
+      padding: 10px;
+      text-align: center;
     }
-
-    a img {
-      transition: transform 0.3s;
+    .casino-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 5px 0;
     }
-
-    a img:hover {
-      transform: scale(1.1);
+    .casino-desc {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 10px;
     }
-
-    /* Адаптивность для мобильных */
-    @media (max-width: 600px) {
-      .container {
-        padding: 15px;
-      }
-
-      h1 {
-        font-size: 1.3rem;
+    .casino-btn {
+      display: inline-block;
+      padding: 8px 12px;
+      background: linear-gradient(45deg, #ff6a00, #ee0979);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+    .casino-btn:hover {
+      background: linear-gradient(45deg, #ee0979, #ff6a00);
+    }
+    /* Анимация появления карточек */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s forwards;
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>А ТЫ ГОТОВ ЗАНОСИТЬ?</h1>
-    <div class="image-container">
-      <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Пример изображения" class="image">
-      <div class="shine"></div>
+    <h1 style="text-align:center;">Выбери своё Казино</h1>
+    <div class="casino-grid">
+      <!-- Повторяющиеся карточки казино -->
+      <div class="casino-card fade-in">
+        <div class="casino-image"></div>
+        <div class="casino-content">
+          <div class="casino-title">Казино 1</div>
+          <div class="casino-desc">Лучшие игры и бонусы</div>
+          <a href="#" class="casino-btn">Перейти</a>
+        </div>
+      </div>
+      <div class="casino-card fade-in" style="animation-delay: 0.1s;">
+        <div class="casino-image" style="background-image: url('https://via.placeholder.com/150');"></div>
+        <div class="casino-content">
+          <div class="casino-title">Казино 2</div>
+          <div class="casino-desc">Уникальные бонусы</div>
+          <a href="#" class="casino-btn">Перейти</a>
+        </div>
+      </div>
+      <!-- Добавьте еще 8 карточек аналогичным образом -->
     </div>
-    <p><strong>№32. ПРОВЕРЕННЫЙ Сайт с Казино - </strong>
-      <a href="https://vk.com/away.php?to=https://1go-irrs01.com/c92683723" rel="noopener nofollow" target="_blank">
-        <strong>Lex</strong>
-      </a>
-      <strong> (оценка 9.4) - лидер среди новых онлайн, с выводом до 1 часа</strong>
-    </p>
-    <br>
-    <p style="text-align:center">
-      <a href="#" onclick="openLink('https://1go-irrs01.com/c92683723')">
-    <img alt="Занести" src="https://png.pngtree.com/png-clipart/20220726/original/pngtree-go-button-green-png-image_8411143.png" style="height:100px; width:100px;" />
-</a>
-
-<script>
-    function openLink(url) {
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.open(url, '_blank');  // Стандартный способ для десктопа или других случаев
-        } else {
-            window.open(url, '_blank');  // Стандартный способ для десктопа или других случаев
-        }
-    }
-</script>
-
-    </p>
   </div>
+  <script>
+    // Пример простой анимации при скролле (если потребуется)
+    document.addEventListener("DOMContentLoaded", function() {
+      const cards = document.querySelectorAll('.casino-card');
+      const options = {
+        threshold: 0.3
+      };
+      const observer = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, options);
+      cards.forEach(card => {
+        observer.observe(card);
+      });
+    });
+  </script>
 </body>
 </html>
