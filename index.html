@@ -4,94 +4,106 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Топ Казино</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Основные стили для страницы */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #e5e5e5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 350px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      color: #0088cc;
+      margin-bottom: 20px;
+    }
+
+    .image-container {
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .image {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      animation: spinScale 8s infinite;
+    }
+
+    @keyframes spinScale {
+      0% {
+        transform: scale(1) rotate(0deg);
+      }
+      50% {
+        transform: scale(1.1) rotate(180deg);
+      }
+      100% {
+        transform: scale(1) rotate(360deg);
+      }
+    }
+
+    a img {
+      transition: transform 0.3s;
+    }
+
+    a img:hover {
+      transform: scale(1.1);
+    }
+
+    /* Адаптивность для мобильных */
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>А ТЫ ГОТОВ ЗАНОСИТЬ?</h1>
-    <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Пример изображения" class="image">
-    <p></p>
-    <p><strong>№32. ПРОВЕРЕННЫЙ Сайт с Казино -&nbsp;</strong><a href="https://1go-irrs01.com/c92683723" rel="noopener nofollow" target="_blank"><strong>Lex</strong></a><strong>(оценка 9.4) - лидер среди новых онлайн, с выводом до 1 часа</strong></p>
-    <p></p>
-     <p style="text-align:center"><a href="https://1go-irrs01.com/c92683723" target="_blank"><img alt="" src="https://png.pngtree.com/png-clipart/20220726/original/pngtree-go-button-green-png-image_8411143.png" style="height:100px; width:100px" /></a></p>
-
+    <div class="image-container">
+      <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Пример изображения" class="image">
+    </div>
+    <p><strong>№32. ПРОВЕРЕННЫЙ Сайт с Казино - </strong>
+      <a href="https://1go-irrs01.com/c92683723" rel="noopener nofollow" target="_blank">
+        <strong>Lex</strong>
+      </a>
+      <strong> (оценка 9.4) - лидер среди новых онлайн, с выводом до 1 часа</strong>
+    </p>
+    <br>
+    <p style="text-align:center">
+      <a href="https://1go-irrs01.com/c92683723" target="_blank">
+        <img alt="Занести" src="https://png.pngtree.com/png-clipart/20220726/original/pngtree-go-button-green-png-image_8411143.png" style="height:100px; width:100px;" />
+      </a>
+    </p>
   </div>
 </body>
 </html>
-
-<style>
-/* Основные стили для страницы */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Roboto', sans-serif; /* Шрифт, схожий с Telegram */
-  background-color: #e5e5e5; /* Светлый фон, похожий на интерфейс Telegram */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.container {
-  text-align: center;
-  background-color: #ffffff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 90%;
-  max-width: 350px;
-}
-
-h1 {
-  font-size: 1.5rem;
-  color: #0088cc; /* Цвет Telegram */
-  margin-bottom: 20px;
-}
-
-.image {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.btn {
-  background-color: #0088cc; /* Основной синий цвет Telegram */
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 25px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 20px;  /* Отступ сверху для кнопки */
-}
-
-.btn:hover {
-  background-color: #007bb5; /* Тёмно-синий для hover эффекта */
-}
-
-/* Адаптивность для мобильных */
-@media (max-width: 600px) {
-  .container {
-    padding: 15px;
-  }
-
-  h1 {
-    font-size: 1.3rem;
-  }
-
-  .btn {
-    padding: 10px 20px;
-    font-size: 0.9rem;
-  }
-}
-
-</style>
-<script>
-
-</script>
