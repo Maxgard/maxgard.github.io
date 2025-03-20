@@ -111,7 +111,7 @@
 <script>
     function openLink(url) {
         if (window.Telegram && window.Telegram.WebApp) {
-            Telegram.WebApp.openLink(url);  // Открывает ссылку в браузере телефона
+            window.open(url, '_blank');  // Стандартный способ для десктопа или других случаев
         } else {
             window.open(url, '_blank');  // Стандартный способ для десктопа или других случаев
         }
