@@ -3,212 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Агрегатор казино</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            color: var(--tg-theme-text-color);
+            background: var(--tg-theme-bg-color);
+        }
+
+        .Main {
+            width: 100%;
+            padding: 25px;
+            text-align: center;
+
+        }
+
+        h1 {
+            margin-top: 40px;
+            margin-bottom: 10px;
+        }
+
+        img {
+            width: 70px;
+            margin: 30px auto;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 5px;
+            margin-top: 50px;
+            height: 60px;
+            width: 200px;
+            font-style: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--tg-theme-button-text-color);
+            background: var(--tg-theme-button-color);
+        }
+
+        form {
+            display: none;
+            text-align: center;
+        }
+        
+        input {
+            outline: none;
+            border-radius: 5px;
+            border: 2px solid #535353;
+            padding: 15px 10px;
+            margin: 10px 0 0;
+            background: var(--tg-theme-section-separator-color);
+            color: var(--tg-theme-text-color);
+            transition: all .2s;
+        }
+        
+        input:focus {
+            border-color: var(--tg-theme-secondary-bg-color)
+        }
+        
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎰 Топ казино 🎰</h1>
-        <div class="carousel">
-            <div class="casino-list">
-                <div class="casino-card">
-                    <h2>Казино 1</h2>
-                    <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Casino 1">
-                    <p>🌟 Лучшие слоты и быстрые выплаты! 🌟</p>
-                    <a href="https://www.example.com" class="button">Перейти</a>
-                </div>
-                <div class="casino-card">
-                    <h2>Казино 2</h2>
-                    <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Casino 2">
-                    <p>🎉 Большие бонусы и акции каждый день! 🎉</p>
-                    <a href="https://www.example.com" class="button">Перейти</a>
-                </div>
-                <div class="casino-card">
-                    <h2>Казино 3</h2>
-                    <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Casino 3">
-                    <p>💎 Эксклюзивные игры и высокие ставки! 💎</p>
-                    <a href="https://www.example.com" class="button">Перейти</a>
-                </div>
-                <div class="casino-card">
-                    <h2>Казино 4</h2>
-                    <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Casino 4">
-                    <p>🔥 Лучшие турниры и розыгрыши призов! 🔥</p>
-                    <a href="https://www.example.com" class="button">Перейти</a>
-                </div>
-            </div>
-            <button class="carousel-button prev" onclick="moveCarousel(-1)"></button>
-            <button class="carousel-button next" onclick="moveCarousel(1)"></button>
-        </div>
+    <div class="Main">
+        <h1>Тестовое приложение</h1>
+        <img src="{{ url_for('static', filename='bot.png') }}" alt="">
+        <p></p>
+        <button class="btn f-btn">Тест отправки данных</button>
     </div>
-    <script src="script.js"></script>
+    <form class="test-form">    
+        <input type="text" placeholder="Введите заголовок" class="title-inp">
+        <input type="text" placeholder="Введите описание" class="desc-inp">
+        <input type="text" placeholder="Введите текст" class="text-inp">
+        <button class="btn s-btn">Отправить</button>
+    </form>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+
+        let fBtn = document.getElementsByClassName("f-btn")[0]
+        let sBtn = document.getElementsByClassName("s-btn")[0]
+
+        fBtn.addEventListener("click", () => {
+            document.getElementsByClassName("Main")[0].style.display = "none";
+            document.getElementsByClassName("test-form")[0].style.display = "block";
+        });
+
+        sBtn.addEventListener("click", () => {
+            let title = document.getElementsByClassName("title-inp")[0];
+            let description = document.getElementsByClassName("desc-inp")[0];
+            let text = document.getElementsByClassName("text-inp")[0];
+
+            
+            let data = {
+                title: title.value,
+                desc: description.value,    
+                text: text.value
+            }
+
+            tg.sendData(JSON.stringify(data));
+        });
+    </script>
 </body>
 </html>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    margin: 0;
-    padding: 0;
-    color: white;
-}
-
-.container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-}
-
-h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 2.5em;
-    color: #ffd700;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.carousel {
-    position: relative;
-    overflow: hidden;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.casino-list {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-}
-
-.casino-card {
-    flex: 0 0 100%;
-    background: #fff;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    transition: box-shadow 0.3s ease;
-    margin: 0 10px; /* Добавим отступы между карточками */
-}
-
-.casino-card h2 {
-    margin-bottom: 15px;
-    font-size: 1.5em;
-    color: #333;
-}
-
-.casino-card img {
-    width: 100%;
-    max-width: 300px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation: glow 2s infinite alternate;
-}
-
-@keyframes glow {
-    0% {
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-    }
-    100% {
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
-    }
-}
-
-.casino-card p {
-    font-size: 1.2em;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-.button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    text-decoration: none;
-    display: inline-block;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.button:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
-
-.carousel-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 215, 0, 0.8);
-    color: #1e3c72;
-    border: none;
-    padding: 15px;
-    cursor: pointer;
-    border-radius: 50%;
-    font-size: 1.5em;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    z-index: 10; /* Убедимся, что стрелки поверх карточек */
-}
-
-.carousel-button:hover {
-    background-color: rgba(255, 193, 7, 0.8);
-    transform: scale(1.1);
-}
-
-.carousel-button.prev {
-    left: 10px;
-}
-
-.carousel-button.next {
-    right: 10px;
-}
-
-.carousel-button::before {
-    content: '';
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
-}
-
-.carousel-button.prev::before {
-    transform: rotate(135deg);
-}
-
-.carousel-button.next::before {
-    transform: rotate(-45deg);
-}
-</style>
-<script>
-let currentIndex = 0;
-
-function moveCarousel(direction) {
-    const carousel = document.querySelector('.casino-list');
-    const cards = document.querySelectorAll('.casino-card');
-    const totalCards = cards.length;
-
-    currentIndex += direction;
-
-    if (currentIndex < 0) {
-        currentIndex = totalCards - 1;
-    } else if (currentIndex >= totalCards) {
-        currentIndex = 0;
-    }
-
-    const offset = -currentIndex * 100;
-    carousel.style.transform = `translateX(${offset}%)`;
-}
-</script>
