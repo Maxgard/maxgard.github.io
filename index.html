@@ -15,50 +15,70 @@
             color: var(--tg-theme-text-color);
             background: var(--tg-theme-bg-color);
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
         }
 
-        .Main {
-            width: 100%;
-            padding: 25px;
+        .casino-card {
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
         h1 {
-            margin-top: 40px;
-            margin-bottom: 10px;
+            margin: 20px 0;
+            font-size: 24px;
         }
 
-        img {
-            width: 200px;
-            margin: 200px auto;
-            display: block;
+        .casino-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .casino-text {
+            margin: 15px 0;
+            font-size: 16px;
+            line-height: 1.4;
         }
 
         .btn {
             border: 0;
-            border-radius: 5px;
-            margin-top: 50px;
-            height: 60px;
-            width: 200px;
-            font-size: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            height: 50px;
+            width: 100%;
+            font-size: 18px;
             font-weight: 500;
             cursor: pointer;
             color: var(--tg-theme-button-text-color);
             background: var(--tg-theme-button-color);
-            transition: opacity 0.2s;
+            transition: all 0.2s;
         }
 
         .btn:hover {
             opacity: 0.9;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
-    <div class="Main">
-        <h1>Заголовок 1</h1>
-        <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Логотип">
-        <p>Прекрасный текст с эмоджи и прочей ереси</p>
-        <button type="button" class="btn" id="mainButton">Перейти</button>
+    <div class="casino-card" id="casino1">
+        <h1>Казино 1</h1>
+        <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Логотип казино 1" class="casino-image">
+        <p class="casino-text">🌟 Лучшие слоты и быстрые выплаты! 🎰</p>
+        <button type="button" class="btn" id="casino1Button">Играть сейчас</button>
+    </div>
+
+    <div class="casino-card" id="casino2">
+        <h1>Казино 2</h1>
+        <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Логотип казино 2" class="casino-image">
+        <p class="casino-text">🎉 Эксклюзивные бонусы для новых игроков! 💰</p>
+        <button type="button" class="btn" id="casino2Button">Начать игру</button>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -66,9 +86,14 @@
         const tg = window.Telegram.WebApp;
         tg.expand(); // Раскрываем WebApp на весь экран
         
-        document.getElementById('mainButton').addEventListener('click', () => {
-            tg.sendData('Button clicked'); // Отправляем данные в Telegram
-            tg.close(); // Закрываем WebApp
+        document.getElementById('casino1Button').addEventListener('click', () => {
+            tg.sendData('Selected Casino 1');
+            tg.close();
+        });
+        
+        document.getElementById('casino2Button').addEventListener('click', () => {
+            tg.sendData('Selected Casino 2');
+            tg.close();
         });
     </script>
 </body>
