@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram WebApp</title>
+    <title>Карусель казино</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,88 +13,249 @@
         }
 
         body {
-            color: var(--tg-theme-text-color);
-            background: var(--tg-theme-bg-color);
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            background: #0f0f1a;
+            color: white;
             padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .carousel-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 15px;
+            padding: 10px 0;
+            scroll-snap-type: x mandatory;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .carousel-track::-webkit-scrollbar {
+            display: none;
         }
 
         .casino-card {
-            background: var(--tg-theme-secondary-bg-color);
-            border-radius: 15px;
+            scroll-snap-align: center;
+            min-width: 85%;
+            background: linear-gradient(135deg, #2a2a4a, #1a1a2e);
+            border-radius: 20px;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, opacity 0.3s;
+            opacity: 0.8;
+            transform: scale(0.95);
         }
 
-        h1 {
-            margin: 20px 0;
-            font-size: 24px;
+        .casino-card.active {
+            opacity: 1;
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.2);
         }
 
         .casino-image {
             width: 100%;
             height: 180px;
             object-fit: cover;
-            border-radius: 10px;
-            margin: 15px 0;
+            border-radius: 15px;
+            margin-bottom: 15px;
         }
 
         .casino-text {
-            margin: 15px 0;
-            font-size: 16px;
-            line-height: 1.4;
+            margin: 10px 0;
+            color: #e0e0e0;
         }
 
-        .btn {
-            border: 0;
-            border-radius: 8px;
-            margin-top: 20px;
-            height: 50px;
+        .casino-btn {
+            display: block;
             width: 100%;
-            font-size: 18px;
-            font-weight: 500;
+            padding: 12px;
+            margin-top: 15px;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
             cursor: pointer;
-            color: var(--tg-theme-button-text-color);
-            background: var(--tg-theme-button-color);
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
-        .btn:hover {
-            opacity: 0.9;
+        .casino-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .dots-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: gold;
+            transform: scale(1.3);
         }
     </style>
 </head>
 <body>
-    <div class="casino-card" id="casino1">
-        <h1>Казино 1</h1>
-        <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Логотип казино 1" class="casino-image">
-        <p class="casino-text">🌟 Лучшие слоты и быстрые выплаты! 🎰</p>
-        <button type="button" class="btn" id="casino1Button">Играть сейчас</button>
+    <div class="carousel-container">
+        <div class="carousel-track"></div>
+        <div class="dots-container"></div>
     </div>
 
-    <div class="casino-card" id="casino2">
-        <h1>Казино 2</h1>
-        <img src="https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg" alt="Логотип казино 2" class="casino-image">
-        <p class="casino-text">🎉 Эксклюзивные бонусы для новых игроков! 💰</p>
-        <button type="button" class="btn" id="casino2Button">Начать игру</button>
-    </div>
-
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand(); // Раскрываем WebApp на весь экран
-        
-        document.getElementById('casino1Button').addEventListener('click', () => {
-            tg.sendData('Selected Casino 1');
-            tg.close();
-        });
-        
-        document.getElementById('casino2Button').addEventListener('click', () => {
-            tg.sendData('Selected Casino 2');
-            tg.close();
+        document.addEventListener('DOMContentLoaded', () => {
+            const carouselTrack = document.querySelector('.carousel-track');
+            const dotsContainer = document.querySelector('.dots-container');
+            const cardsData = [
+                { 
+                    title: "Казино 1", 
+                    text: "🎰 100% бонус на первый депозит!", 
+                    img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
+                    link: "https://www.example.com"
+                },
+                { 
+                    title: "Казино 2", 
+                    text: "💰 Кэшбэк 10% каждую неделю", 
+                    img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
+                    link: "https://www.example.com"
+                },
+                { 
+                    title: "Казино 3", 
+                    text: "🔥 Турниры с призовым фондом", 
+                    img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
+                    link: "https://www.example.com"
+                },
+                { 
+                    title: "Казино 4", 
+                    text: "💎 Эксклюзивные слоты", 
+                    img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
+                    link: "https://www.example.com"
+                }
+            ];
+
+            // Создаем карточки и точки
+            cardsData.forEach((card, index) => {
+                // Добавляем карточку
+                const cardElement = document.createElement('div');
+                cardElement.className = 'casino-card';
+                cardElement.innerHTML = `
+                    <h2>${card.title}</h2>
+                    <img src="${card.img}" alt="${card.title}" class="casino-image">
+                    <p class="casino-text">${card.text}</p>
+                    <button class="casino-btn" onclick="window.open('${card.link}', '_blank')">Играть сейчас</button>
+                `;
+                carouselTrack.appendChild(cardElement);
+
+                // Добавляем точку-индикатор
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.dataset.index = index;
+                dotsContainer.appendChild(dot);
+            });
+
+            const cards = document.querySelectorAll('.casino-card');
+            const dots = document.querySelectorAll('.dot');
+            let currentIndex = 0;
+            let autoScrollInterval;
+            let isDragging = false;
+            let startX, scrollLeft;
+
+            // Активируем первую карточку
+            updateActiveCard(0);
+
+            // Автопрокрутка каждые 4 секунды
+            function startAutoScroll() {
+                autoScrollInterval = setInterval(() => {
+                    if (!isDragging) {
+                        currentIndex = (currentIndex + 1) % cards.length;
+                        scrollToCard(currentIndex);
+                    }
+                }, 4000);
+            }
+            startAutoScroll();
+
+            // Плавный скролл к карточке
+            function scrollToCard(index) {
+                cards[index].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
+                updateActiveCard(index);
+            }
+
+            // Обновляем активную карточку и точки
+            function updateActiveCard(index) {
+                cards.forEach((card, i) => {
+                    card.classList.toggle('active', i === index);
+                });
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+            }
+
+            // Обработчики для точек
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = parseInt(dot.dataset.index);
+                    currentIndex = index;
+                    scrollToCard(index);
+                    resetAutoScroll();
+                });
+            });
+
+            // Свайп мышью/тач
+            carouselTrack.addEventListener('mousedown', (e) => startDrag(e));
+            carouselTrack.addEventListener('touchstart', (e) => startDrag(e.touches[0]));
+            carouselTrack.addEventListener('mousemove', (e) => drag(e));
+            carouselTrack.addEventListener('touchmove', (e) => drag(e.touches[0]));
+            carouselTrack.addEventListener('mouseup', endDrag);
+            carouselTrack.addEventListener('touchend', endDrag);
+
+            function startDrag(e) {
+                isDragging = true;
+                startX = e.pageX - carouselTrack.offsetLeft;
+                scrollLeft = carouselTrack.scrollLeft;
+                clearInterval(autoScrollInterval);
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - carouselTrack.offsetLeft;
+                const walk = (x - startX) * 2;
+                carouselTrack.scrollLeft = scrollLeft - walk;
+            }
+
+            function endDrag() {
+                isDragging = false;
+                const cardWidth = cards[0].offsetWidth + 15;
+                currentIndex = Math.round(carouselTrack.scrollLeft / cardWidth) % cards.length;
+                scrollToCard(currentIndex);
+                startAutoScroll();
+            }
+
+            function resetAutoScroll() {
+                clearInterval(autoScrollInterval);
+                startAutoScroll();
+            }
         });
     </script>
 </body>
