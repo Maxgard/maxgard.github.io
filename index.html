@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -18,7 +19,8 @@
             color: white;
             padding: 20px;
             overflow-x: hidden;
-            user-select: none; /* Запрет выделения текста при свайпе */
+            user-select: none;
+            touch-action: pan-y;
         }
 
         .carousel-container {
@@ -57,6 +59,7 @@
             transition: transform 0.3s, opacity 0.3s;
             opacity: 0.8;
             transform: scale(0.95);
+            flex-shrink: 0;
         }
 
         .casino-card.active {
@@ -65,19 +68,25 @@
             box-shadow: 0 15px 30px rgba(255, 215, 0, 0.2);
         }
 
+        .casino-card h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
         .casino-image {
             width: 100%;
             height: 180px;
             object-fit: cover;
             border-radius: 15px;
             margin-bottom: 15px;
-            pointer-events: none; /* Отключаем события мыши для изображения */
+            pointer-events: none;
         }
 
         .casino-text {
             margin: 10px 0;
             color: #e0e0e0;
-            pointer-events: none; /* Отключаем события мыши для текста */
+            text-align: center;
+            pointer-events: none;
         }
 
         .casino-btn {
@@ -92,7 +101,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            pointer-events: auto; /* Кнопка кликабельна */
+            pointer-events: auto;
         }
 
         .casino-btn:hover {
@@ -159,7 +168,7 @@
                 }
             ];
 
-            // Создаем карточки и точки
+            // Создаем карточки
             cardsData.forEach((card, index) => {
                 const cardElement = document.createElement('div');
                 cardElement.className = 'casino-card';
@@ -182,12 +191,14 @@
             let currentIndex = 0;
             let isDragging = false;
             let startX, scrollLeft;
+            let startTime;
 
             // Активируем первую карточку
             updateActiveCard(0);
 
             // Плавный скролл к карточке
             function scrollToCard(index) {
+                currentIndex = index;
                 cards[index].scrollIntoView({
                     behavior: 'smooth',
                     block: 'nearest',
@@ -204,7 +215,6 @@
                 dots.forEach((dot, i) => {
                     dot.classList.toggle('active', i === index);
                 });
-                currentIndex = index;
             }
 
             // Обработчики для точек
@@ -215,62 +225,83 @@
                 });
             });
 
-            // Свайп мышью/тач (кроме кнопки)
+            // Обработчики для мыши
             carouselTrack.addEventListener('mousedown', (e) => {
                 if (e.target.classList.contains('casino-btn')) return;
-                startDrag(e);
-            });
-            
-            carouselTrack.addEventListener('touchstart', (e) => {
-                if (e.target.classList.contains('casino-btn')) return;
-                startDrag(e.touches[0]);
-            });
-
-            carouselTrack.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                drag(e);
-            });
-
-            carouselTrack.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                drag(e.touches[0]);
-                e.preventDefault(); // Блокируем скролл страницы
-            });
-
-            carouselTrack.addEventListener('mouseup', endDrag);
-            carouselTrack.addEventListener('mouseleave', endDrag);
-            carouselTrack.addEventListener('touchend', endDrag);
-
-            function startDrag(e) {
                 isDragging = true;
                 startX = e.pageX - carouselTrack.offsetLeft;
                 scrollLeft = carouselTrack.scrollLeft;
+                startTime = Date.now();
                 carouselTrack.style.cursor = 'grabbing';
-            }
+                e.preventDefault();
+            });
 
-            function drag(e) {
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
                 const x = e.pageX - carouselTrack.offsetLeft;
-                const walk = (x - startX) * 1.5; // Чувствительность свайпа
+                const walk = (x - startX) * 1.5;
                 carouselTrack.scrollLeft = scrollLeft - walk;
-            }
+            });
 
-            function endDrag() {
+            document.addEventListener('mouseup', () => {
                 if (!isDragging) return;
                 isDragging = false;
                 carouselTrack.style.cursor = 'grab';
-                
-                // Определяем ближайшую карточку
+                handleDragEnd();
+            });
+
+            // Обработчики для тач-устройств
+            carouselTrack.addEventListener('touchstart', (e) => {
+                if (e.target.classList.contains('casino-btn')) return;
+                const touch = e.touches[0];
+                isDragging = true;
+                startX = touch.pageX - carouselTrack.offsetLeft;
+                scrollLeft = carouselTrack.scrollLeft;
+                startTime = Date.now();
+            }, { passive: false });
+
+            carouselTrack.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const touch = e.touches[0];
+                const x = touch.pageX - carouselTrack.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                carouselTrack.scrollLeft = scrollLeft - walk;
+                e.preventDefault();
+            }, { passive: false });
+
+            carouselTrack.addEventListener('touchend', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                handleDragEnd();
+            });
+
+            // Общая логика завершения перетаскивания
+            function handleDragEnd() {
                 const cardWidth = cards[0].offsetWidth + 15;
-                const newIndex = Math.round(carouselTrack.scrollLeft / cardWidth) % cards.length;
+                const threshold = cardWidth * 0.3; // 30% ширины для срабатывания
+                const distance = carouselTrack.scrollLeft - scrollLeft;
+                const timeElapsed = Date.now() - startTime;
+                const velocity = Math.abs(distance) / timeElapsed;
+                
+                let newIndex = currentIndex;
+                
+                // Определяем направление и силу свайпа
+                if (Math.abs(distance) > threshold || velocity > 0.3) {
+                    newIndex = distance > 0 ? 
+                        Math.max(currentIndex - 1, 0) : 
+                        Math.min(currentIndex + 1, cards.length - 1);
+                }
+                
                 scrollToCard(newIndex);
             }
 
-            // Обновляем активную карточку при скролле
+            // Обновление при обычном скролле
             carouselTrack.addEventListener('scroll', () => {
                 if (isDragging) return;
                 const cardWidth = cards[0].offsetWidth + 15;
-                const newIndex = Math.round(carouselTrack.scrollLeft / cardWidth) % cards.length;
-                if (newIndex !== currentIndex) {
+                const newIndex = Math.round(carouselTrack.scrollLeft / cardWidth);
+                if (newIndex !== currentIndex && newIndex >= 0 && newIndex < cards.length) {
+                    currentIndex = newIndex;
                     updateActiveCard(newIndex);
                 }
             });
