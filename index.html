@@ -18,6 +18,7 @@
             color: white;
             padding: 20px;
             overflow-x: hidden;
+            user-select: none; /* Запрет выделения текста при свайпе */
         }
 
         .carousel-container {
@@ -35,6 +36,11 @@
             overflow-x: auto;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
+            cursor: grab;
+        }
+
+        .carousel-track:active {
+            cursor: grabbing;
         }
 
         .carousel-track::-webkit-scrollbar {
@@ -65,11 +71,13 @@
             object-fit: cover;
             border-radius: 15px;
             margin-bottom: 15px;
+            pointer-events: none; /* Отключаем события мыши для изображения */
         }
 
         .casino-text {
             margin: 10px 0;
             color: #e0e0e0;
+            pointer-events: none; /* Отключаем события мыши для текста */
         }
 
         .casino-btn {
@@ -84,6 +92,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            pointer-events: auto; /* Кнопка кликабельна */
         }
 
         .casino-btn:hover {
@@ -152,7 +161,6 @@
 
             // Создаем карточки и точки
             cardsData.forEach((card, index) => {
-                // Добавляем карточку
                 const cardElement = document.createElement('div');
                 cardElement.className = 'casino-card';
                 cardElement.innerHTML = `
@@ -163,7 +171,6 @@
                 `;
                 carouselTrack.appendChild(cardElement);
 
-                // Добавляем точку-индикатор
                 const dot = document.createElement('div');
                 dot.className = 'dot';
                 dot.dataset.index = index;
@@ -173,23 +180,11 @@
             const cards = document.querySelectorAll('.casino-card');
             const dots = document.querySelectorAll('.dot');
             let currentIndex = 0;
-            let autoScrollInterval;
             let isDragging = false;
             let startX, scrollLeft;
 
             // Активируем первую карточку
             updateActiveCard(0);
-
-            // Автопрокрутка каждые 4 секунды
-            function startAutoScroll() {
-                autoScrollInterval = setInterval(() => {
-                    if (!isDragging) {
-                        currentIndex = (currentIndex + 1) % cards.length;
-                        scrollToCard(currentIndex);
-                    }
-                }, 4000);
-            }
-            startAutoScroll();
 
             // Плавный скролл к карточке
             function scrollToCard(index) {
@@ -201,7 +196,7 @@
                 updateActiveCard(index);
             }
 
-            // Обновляем активную карточку и точки
+            // Обновляем активную карточку
             function updateActiveCard(index) {
                 cards.forEach((card, i) => {
                     card.classList.toggle('active', i === index);
@@ -209,53 +204,76 @@
                 dots.forEach((dot, i) => {
                     dot.classList.toggle('active', i === index);
                 });
+                currentIndex = index;
             }
 
             // Обработчики для точек
             dots.forEach(dot => {
                 dot.addEventListener('click', () => {
                     const index = parseInt(dot.dataset.index);
-                    currentIndex = index;
                     scrollToCard(index);
-                    resetAutoScroll();
                 });
             });
 
-            // Свайп мышью/тач
-            carouselTrack.addEventListener('mousedown', (e) => startDrag(e));
-            carouselTrack.addEventListener('touchstart', (e) => startDrag(e.touches[0]));
-            carouselTrack.addEventListener('mousemove', (e) => drag(e));
-            carouselTrack.addEventListener('touchmove', (e) => drag(e.touches[0]));
+            // Свайп мышью/тач (кроме кнопки)
+            carouselTrack.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('casino-btn')) return;
+                startDrag(e);
+            });
+            
+            carouselTrack.addEventListener('touchstart', (e) => {
+                if (e.target.classList.contains('casino-btn')) return;
+                startDrag(e.touches[0]);
+            });
+
+            carouselTrack.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                drag(e);
+            });
+
+            carouselTrack.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                drag(e.touches[0]);
+                e.preventDefault(); // Блокируем скролл страницы
+            });
+
             carouselTrack.addEventListener('mouseup', endDrag);
+            carouselTrack.addEventListener('mouseleave', endDrag);
             carouselTrack.addEventListener('touchend', endDrag);
 
             function startDrag(e) {
                 isDragging = true;
                 startX = e.pageX - carouselTrack.offsetLeft;
                 scrollLeft = carouselTrack.scrollLeft;
-                clearInterval(autoScrollInterval);
+                carouselTrack.style.cursor = 'grabbing';
             }
 
             function drag(e) {
-                if (!isDragging) return;
-                e.preventDefault();
                 const x = e.pageX - carouselTrack.offsetLeft;
-                const walk = (x - startX) * 2;
+                const walk = (x - startX) * 1.5; // Чувствительность свайпа
                 carouselTrack.scrollLeft = scrollLeft - walk;
             }
 
             function endDrag() {
+                if (!isDragging) return;
                 isDragging = false;
+                carouselTrack.style.cursor = 'grab';
+                
+                // Определяем ближайшую карточку
                 const cardWidth = cards[0].offsetWidth + 15;
-                currentIndex = Math.round(carouselTrack.scrollLeft / cardWidth) % cards.length;
-                scrollToCard(currentIndex);
-                startAutoScroll();
+                const newIndex = Math.round(carouselTrack.scrollLeft / cardWidth) % cards.length;
+                scrollToCard(newIndex);
             }
 
-            function resetAutoScroll() {
-                clearInterval(autoScrollInterval);
-                startAutoScroll();
-            }
+            // Обновляем активную карточку при скролле
+            carouselTrack.addEventListener('scroll', () => {
+                if (isDragging) return;
+                const cardWidth = cards[0].offsetWidth + 15;
+                const newIndex = Math.round(carouselTrack.scrollLeft / cardWidth) % cards.length;
+                if (newIndex !== currentIndex) {
+                    updateActiveCard(newIndex);
+                }
+            });
         });
     </script>
 </body>
