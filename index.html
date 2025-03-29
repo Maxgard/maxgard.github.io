@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Карусель казино</title>
+    <title>Карусель казино с эффектами</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -23,8 +24,15 @@
         .carousel-container {
             width: 100%;
             max-width: 400px;
-            margin: 0 auto;
+            margin: 20px auto;
             position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .carousel-track {
@@ -62,7 +70,12 @@
         .casino-card.active {
             opacity: 1;
             transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.2);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
+            to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.7); }
         }
 
         .casino-image {
@@ -98,27 +111,52 @@
         .casino-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateY(-2px) translateX(0); }
+            25% { transform: translateY(-2px) translateX(-3px); }
+            50% { transform: translateY(-2px) translateX(3px); }
+            75% { transform: translateY(-2px) translateX(-3px); }
         }
 
         .dots-container {
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 12px;
             margin-top: 20px;
+            padding: 12px 0;
         }
 
         .dot {
-            width: 10px;
-            height: 10px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .dot:hover {
+            transform: scale(1.5);
+            background: rgba(255, 215, 0, 0.7);
         }
 
         .dot.active {
+            transform: scale(1.5);
             background: gold;
-            transform: scale(1.3);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -127,35 +165,74 @@
         <div class="carousel-track"></div>
         <div class="dots-container"></div>
     </div>
+    <canvas id="particles"></canvas>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Инициализация частиц
+            function initParticles() {
+                const canvas = document.getElementById('particles');
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                const particles = [];
+                const particleCount = window.innerWidth < 768 ? 30 : 60;
+
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        size: Math.random() * 3 + 1,
+                        speedX: (Math.random() - 0.5) * 0.5,
+                        speedY: (Math.random() - 0.5) * 0.5,
+                        color: `rgba(255, 215, 0, ${Math.random() * 0.5 + 0.1})`
+                    });
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    particles.forEach(particle => {
+                        ctx.beginPath();
+                        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                        ctx.fillStyle = particle.color;
+                        ctx.fill();
+
+                        particle.x += particle.speedX;
+                        particle.y += particle.speedY;
+
+                        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
+                        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
+                    });
+
+                    requestAnimationFrame(animate);
+                }
+
+                animate();
+            }
+
+            // Инициализация карусели
             const carouselTrack = document.querySelector('.carousel-track');
             const dotsContainer = document.querySelector('.dots-container');
             const cardsData = [
                 { 
-                    title: "Казино 1", 
-                    text: "🎰 100% бонус на первый депозит!", 
+                    title: "ROYAL CASINO", 
+                    text: "🎰 100% бонус<br>на первый депозит!", 
                     img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
-                    link: "https://www.example.com"
+                    link: "#"
                 },
                 { 
-                    title: "Казино 2", 
-                    text: "💰 Кэшбэк 10% каждую неделю", 
+                    title: "GOLDEN SLOTS", 
+                    text: "💰 Кэшбэк 10%<br>каждую неделю", 
                     img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
-                    link: "https://www.example.com"
+                    link: "#"
                 },
                 { 
-                    title: "Казино 3", 
-                    text: "🔥 Турниры с призовым фондом", 
+                    title: "LUCKY SPIN", 
+                    text: "🔥 Турниры<br>с призовым фондом", 
                     img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
-                    link: "https://www.example.com"
-                },
-                { 
-                    title: "Казино 4", 
-                    text: "💎 Эксклюзивные слоты", 
-                    img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
-                    link: "https://www.example.com"
+                    link: "#"
                 }
             ];
 
@@ -221,7 +298,7 @@
                 isTouchDevice = true;
             }, { once: true });
 
-            // Свайп мышью/тач (кроме кнопки)
+            // Свайп мышью/тач
             carouselTrack.addEventListener('mousedown', (e) => {
                 if (e.target.classList.contains('casino-btn')) return;
                 startDrag(e);
@@ -256,7 +333,6 @@
 
             function drag(e) {
                 const x = e.pageX - carouselTrack.offsetLeft;
-                // Увеличиваем чувствительность для тач-устройств
                 const sensitivity = isTouchDevice ? 3 : 1.5;
                 const walk = (x - startX) * sensitivity;
                 carouselTrack.scrollLeft = scrollLeft - walk;
@@ -267,7 +343,6 @@
                 isDragging = false;
                 carouselTrack.style.cursor = 'grab';
                 
-                // Определяем ближайшую карточку
                 const cardWidth = cards[0].offsetWidth + 15;
                 const newIndex = Math.round(carouselTrack.scrollLeft / cardWidth) % cards.length;
                 scrollToCard(newIndex);
@@ -281,6 +356,16 @@
                 if (newIndex !== currentIndex) {
                     updateActiveCard(newIndex);
                 }
+            });
+
+            // Запускаем частицы
+            initParticles();
+
+            // Адаптивность при ресайзе
+            window.addEventListener('resize', () => {
+                const canvas = document.getElementById('particles');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
             });
         });
     </script>
