@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Карусель казино с эффектами</title>
+    <title>Премиум карусель казино</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -19,6 +19,29 @@
             padding: 20px;
             overflow-x: hidden;
             user-select: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255,215,0,0.2) 0%, transparent 70%);
+            opacity: 0;
+            animation: fadeIn 1s 0.3s forwards;
+            z-index: -1;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes flash {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0; transform: scale(1.5); }
         }
 
         .carousel-container {
@@ -38,7 +61,7 @@
         .carousel-track {
             display: flex;
             gap: 15px;
-            padding: 10px 0;
+            padding: 10px;
             scroll-snap-type: x mandatory;
             overflow-x: auto;
             scroll-behavior: smooth;
@@ -56,7 +79,7 @@
 
         .casino-card {
             scroll-snap-align: center;
-            min-width: 85%;
+            flex: 0 0 85%;
             background: linear-gradient(135deg, #2a2a4a, #1a1a2e);
             border-radius: 20px;
             padding: 20px;
@@ -127,6 +150,8 @@
             gap: 12px;
             margin-top: 20px;
             padding: 12px 0;
+            flex-wrap: wrap;
+            max-width: 100%;
         }
 
         .dot {
@@ -136,6 +161,25 @@
             background: rgba(255, 255, 255, 0.3);
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative;
+        }
+
+        .dot:hover::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            border: 1px solid gold;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            70% { transform: scale(1.3); opacity: 0; }
+            100% { opacity: 0; }
         }
 
         .dot:hover {
@@ -177,16 +221,18 @@
                 canvas.height = window.innerHeight;
 
                 const particles = [];
-                const particleCount = window.innerWidth < 768 ? 30 : 60;
+                const particleCount = window.innerWidth < 768 ? 40 : 80;
+                const colors = ['rgba(255, 215, 0, 0.6)', 'rgba(255, 255, 255, 0.3)', 'rgba(255, 105, 0, 0.4)'];
 
                 for (let i = 0; i < particleCount; i++) {
                     particles.push({
                         x: Math.random() * canvas.width,
                         y: Math.random() * canvas.height,
-                        size: Math.random() * 3 + 1,
-                        speedX: (Math.random() - 0.5) * 0.5,
-                        speedY: (Math.random() - 0.5) * 0.5,
-                        color: `rgba(255, 215, 0, ${Math.random() * 0.5 + 0.1})`
+                        size: Math.random() * 4 + 1,
+                        speedX: (Math.random() - 0.5) * 0.7,
+                        speedY: (Math.random() - 0.5) * 0.7,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        shape: Math.random() > 0.5 ? 'circle' : 'rect'
                     });
                 }
 
@@ -195,7 +241,17 @@
                     
                     particles.forEach(particle => {
                         ctx.beginPath();
-                        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                        if (particle.shape === 'circle') {
+                            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                        } else {
+                            ctx.roundRect(
+                                particle.x - particle.size,
+                                particle.y - particle.size,
+                                particle.size * 2,
+                                particle.size * 2,
+                                particle.size
+                            );
+                        }
                         ctx.fillStyle = particle.color;
                         ctx.fill();
 
@@ -216,24 +272,16 @@
             const carouselTrack = document.querySelector('.carousel-track');
             const dotsContainer = document.querySelector('.dots-container');
             const cardsData = [
-                { 
-                    title: "ROYAL CASINO", 
-                    text: "🎰 100% бонус<br>на первый депозит!", 
-                    img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
-                    link: "#"
-                },
-                { 
-                    title: "GOLDEN SLOTS", 
-                    text: "💰 Кэшбэк 10%<br>каждую неделю", 
-                    img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
-                    link: "#"
-                },
-                { 
-                    title: "LUCKY SPIN", 
-                    text: "🔥 Турниры<br>с призовым фондом", 
-                    img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg",
-                    link: "#"
-                }
+                { title: "ROYAL CASINO", text: "🎰 100% бонус<br>на первый депозит!", img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg", link: "#" },
+                { title: "GOLDEN SLOTS", text: "💰 Кэшбэк 10%<br>каждую неделю", img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg", link: "#" },
+                { title: "LUCKY SPIN", text: "🔥 Турниры<br>с призовым фондом", img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg", link: "#" },
+                { title: "DIAMOND CLUB", text: "💎 Эксклюзивные<br>игровые автоматы", img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg", link: "#" },
+                { title: "JACKPOT CITY", text: "🏆 Джекпот<br>от 1 000 000$", img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg", link: "#" },
+                { title: "FORTUNE WHEEL", text: "🎡 Колесо фортуны<br>с ежедневными призами", img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg", link: "#" },
+                { title: "VIP LOUNGE", text: "🛎️ Персональный<br>менеджер", img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg", link: "#" },
+                { title: "CRYSTAL PALACE", text: "🔮 Гарантированные<br>выигрыши", img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg", link: "#" },
+                { title: "EMPIRE CASINO", text: "👑 Бонусы<br>для новых игроков", img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg", link: "#" },
+                { title: "COSMO WIN", text: "🚀 Космические<br>выплаты", img: "https://ffad.ru/storage/articles/HrcBwcW0AXseGKTyjcNp.jpg", link: "#" }
             ];
 
             // Создаем карточки и точки
@@ -264,14 +312,33 @@
             // Активируем первую карточку
             updateActiveCard(0);
 
-            // Плавный скролл к карточке
+            // Плавный скролл к карточке с вспышкой
             function scrollToCard(index) {
-                cards[index].scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'nearest',
-                    inline: 'center'
-                });
-                updateActiveCard(index);
+                // Вспышка
+                const flash = document.createElement('div');
+                flash.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: radial-gradient(circle at center, rgba(255,215,0,0.4) 0%, transparent 70%);
+                    opacity: 0;
+                    animation: flash 0.6s;
+                    z-index: 2;
+                    pointer-events: none;
+                `;
+                document.body.appendChild(flash);
+                
+                setTimeout(() => {
+                    cards[index].scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'center'
+                    });
+                    updateActiveCard(index);
+                    flash.remove();
+                }, 50);
             }
 
             // Обновляем активную карточку
@@ -344,7 +411,11 @@
                 carouselTrack.style.cursor = 'grab';
                 
                 const cardWidth = cards[0].offsetWidth + 15;
-                const newIndex = Math.round(carouselTrack.scrollLeft / cardWidth) % cards.length;
+                let newIndex = Math.round(carouselTrack.scrollLeft / cardWidth);
+                
+                // Фиксируем границы для 10 карточек
+                newIndex = Math.max(0, Math.min(newIndex, cards.length - 1));
+                
                 scrollToCard(newIndex);
             }
 
@@ -352,7 +423,9 @@
             carouselTrack.addEventListener('scroll', () => {
                 if (isDragging) return;
                 const cardWidth = cards[0].offsetWidth + 15;
-                const newIndex = Math.round(carouselTrack.scrollLeft / cardWidth) % cards.length;
+                let newIndex = Math.round(carouselTrack.scrollLeft / cardWidth);
+                newIndex = Math.max(0, Math.min(newIndex, cards.length - 1));
+                
                 if (newIndex !== currentIndex) {
                     updateActiveCard(newIndex);
                 }
