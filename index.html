@@ -17,7 +17,7 @@
             color: white;
             padding: 20px;
             overflow-x: hidden;
-            user-select: none; /* Запрет выделения текста при свайпе */
+            user-select: none;
         }
 
         .carousel-container {
@@ -56,7 +56,7 @@
             transition: transform 0.3s, opacity 0.3s;
             opacity: 0.8;
             transform: scale(0.95);
-            text-align: center; /* Центрируем текст */
+            text-align: center;
         }
 
         .casino-card.active {
@@ -71,13 +71,13 @@
             object-fit: cover;
             border-radius: 15px;
             margin-bottom: 15px;
-            pointer-events: none; /* Отключаем события мыши для изображения */
+            pointer-events: none;
         }
 
         .casino-text {
             margin: 10px 0;
             color: #e0e0e0;
-            pointer-events: none; /* Отключаем события мыши для текста */
+            pointer-events: none;
         }
 
         .casino-btn {
@@ -92,7 +92,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            pointer-events: auto; /* Кнопка кликабельна */
+            pointer-events: auto;
         }
 
         .casino-btn:hover {
@@ -182,6 +182,7 @@
             let currentIndex = 0;
             let isDragging = false;
             let startX, scrollLeft;
+            let isTouchDevice = false;
 
             // Активируем первую карточку
             updateActiveCard(0);
@@ -215,6 +216,11 @@
                 });
             });
 
+            // Определяем тач-устройство
+            carouselTrack.addEventListener('touchstart', () => {
+                isTouchDevice = true;
+            }, { once: true });
+
             // Свайп мышью/тач (кроме кнопки)
             carouselTrack.addEventListener('mousedown', (e) => {
                 if (e.target.classList.contains('casino-btn')) return;
@@ -234,7 +240,7 @@
             carouselTrack.addEventListener('touchmove', (e) => {
                 if (!isDragging) return;
                 drag(e.touches[0]);
-                e.preventDefault(); // Блокируем скролл страницы
+                e.preventDefault();
             });
 
             carouselTrack.addEventListener('mouseup', endDrag);
@@ -250,7 +256,9 @@
 
             function drag(e) {
                 const x = e.pageX - carouselTrack.offsetLeft;
-                const walk = (x - startX) * 1.5; // Чувствительность свайпа
+                // Увеличиваем чувствительность для тач-устройств
+                const sensitivity = isTouchDevice ? 3 : 1.5;
+                const walk = (x - startX) * sensitivity;
                 carouselTrack.scrollLeft = scrollLeft - walk;
             }
 
