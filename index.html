@@ -13,9 +13,8 @@
         }
 
         html {
-            scroll-behavior: smooth;
-            overflow: hidden;
             height: 100%;
+            overflow: hidden;
         }
 
         body {
@@ -515,39 +514,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Добавляем флаг для блокировки прокрутки
-            let isScrollLocked = false;
-
-            // 2. Обновляем обработчик touchmove для карусели
-            carouselTrack.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                
-                const xDiff = Math.abs(e.touches[0].pageX - startX);
-                const yDiff = Math.abs(e.touches[0].pageY - startY);
-                
-                if (xDiff > yDiff) {
-                    e.preventDefault();
-                    isScrollLocked = true; // Блокируем скролл страницы
-                    drag(e.touches[0]);
-                } else if (!isScrollLocked) {
-                    // Разрешаем обычную прокрутку страницы
-                    return;
-                }
-            }, { passive: false });
-
-            // 3. Добавляем обработчик для разблокировки
-            carouselTrack.addEventListener('touchend', () => {
-                isScrollLocked = false;
-                endDrag();
-            });
-
-            // 4. Фикс для iOS - предотвращаем "прыжки" страницы
-            document.body.addEventListener('touchmove', (e) => {
-                if (isScrollLocked) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-        document.addEventListener('DOMContentLoaded', () => {
             // Генерация рейтинга
             function generateRating() {
                 return (Math.random() * 0.7 + 4.3).toFixed(1);
@@ -710,9 +676,9 @@
             const dots = document.querySelectorAll('.dot');
             let currentIndex = 0;
             let isDragging = false;
-            let startX, scrollLeft;
-            let startY;
+            let startX, startY, scrollLeft;
             let isTouchDevice = false;
+            let isScrollLocked = false;
 
             // Активируем первую карточку
             updateActiveCard(0);
@@ -793,13 +759,24 @@
                 
                 if (xDiff > yDiff) {
                     e.preventDefault();
+                    isScrollLocked = true;
                     drag(e.touches[0]);
                 }
             }, { passive: false });
 
             carouselTrack.addEventListener('mouseup', endDrag);
             carouselTrack.addEventListener('mouseleave', endDrag);
-            carouselTrack.addEventListener('touchend', endDrag);
+            carouselTrack.addEventListener('touchend', () => {
+                isScrollLocked = false;
+                endDrag();
+            });
+
+            // Блокируем скролл страницы при горизонтальном свайпе
+            document.body.addEventListener('touchmove', (e) => {
+                if (isScrollLocked) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
 
             function startDrag(e) {
                 isDragging = true;
