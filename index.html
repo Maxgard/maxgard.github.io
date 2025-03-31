@@ -14,6 +14,8 @@
 
         html {
             scroll-behavior: smooth;
+            overflow: hidden;
+            height: 100%;
         }
 
         body {
@@ -24,6 +26,10 @@
             overflow-x: hidden;
             user-select: none;
             touch-action: pan-y;
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
         }
 
         body::before {
@@ -508,6 +514,39 @@
     <canvas id="particles"></canvas>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Добавляем флаг для блокировки прокрутки
+            let isScrollLocked = false;
+
+            // 2. Обновляем обработчик touchmove для карусели
+            carouselTrack.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                
+                const xDiff = Math.abs(e.touches[0].pageX - startX);
+                const yDiff = Math.abs(e.touches[0].pageY - startY);
+                
+                if (xDiff > yDiff) {
+                    e.preventDefault();
+                    isScrollLocked = true; // Блокируем скролл страницы
+                    drag(e.touches[0]);
+                } else if (!isScrollLocked) {
+                    // Разрешаем обычную прокрутку страницы
+                    return;
+                }
+            }, { passive: false });
+
+            // 3. Добавляем обработчик для разблокировки
+            carouselTrack.addEventListener('touchend', () => {
+                isScrollLocked = false;
+                endDrag();
+            });
+
+            // 4. Фикс для iOS - предотвращаем "прыжки" страницы
+            document.body.addEventListener('touchmove', (e) => {
+                if (isScrollLocked) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
         document.addEventListener('DOMContentLoaded', () => {
             // Генерация рейтинга
             function generateRating() {
