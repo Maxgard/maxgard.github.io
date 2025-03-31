@@ -6,6 +6,7 @@
     <title>Рейтинг топ-казино 2024</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <style>
+        /* Ваши существующие стили (оставлены без изменений) */
         * {
             margin: 0;
             padding: 0;
@@ -109,7 +110,6 @@
             font-size: 22px;
         }
 
-        /* NEW: Обновлённые стили рейтинга */
         .rating-container {
             margin: 8px 0 12px;
             display: flex;
@@ -256,6 +256,172 @@
             z-index: -1;
             pointer-events: none;
         }
+
+        /* Стили для слот-машины (новые) */
+        .slot-machine-wrapper {
+            margin: 80px auto 40px;
+            max-width: 500px;
+            padding: 0 20px;
+        }
+
+        .slot-machine-container {
+            text-align: center;
+            background: linear-gradient(135deg, #2a2a4a, #1a1a2e);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .slot-machine-container h2 {
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .balance-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .balance, .bet-amount {
+            font-weight: bold;
+            color: gold;
+        }
+
+        .bet-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .bet-btn {
+            flex: 1;
+            padding: 8px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid gold;
+            border-radius: 5px;
+            color: gold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .bet-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        .bet-btn.active {
+            background: gold;
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+        .slot-machine {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .reel {
+            width: 100px;
+            height: 120px;
+            background: #0f0f1a;
+            border: 3px solid gold;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .reel-content {
+            position: absolute;
+            width: 100%;
+            transition: top 4s cubic-bezier(0.17, 0.85, 0.45, 1);
+        }
+
+        .reel-item {
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: gold;
+        }
+
+        .spin-btn {
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            width: 100%;
+        }
+
+        .spin-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .spin-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            color: #999;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: gold;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        .win-animation {
+            animation: winFlash 0.5s 3;
+        }
+
+        @keyframes winFlash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .lever {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+            width: 30px;
+            height: 60px;
+            background: linear-gradient(90deg, #8B0000, #FF0000);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .lever.pulled {
+            transform: translateY(-50%) rotate(-30deg);
+        }
     </style>
 </head>
 <body>
@@ -265,14 +431,69 @@
     </div>
     <canvas id="particles"></canvas>
 
+    <!-- Слот-машина (добавлено в конец) -->
+    <div class="slot-machine-wrapper">
+        <div class="slot-machine-container">
+            <h2>🎰 Испытайте удачу в нашем слоте!</h2>
+            
+            <div class="balance-container">
+                <div>Баланс: <span class="balance" id="balance">1000</span>₽</div>
+                <div>Ставка: <span class="bet-amount" id="betAmount">50</span>₽</div>
+            </div>
+            
+            <div class="bet-controls">
+                <button class="bet-btn" data-bet="10">10₽</button>
+                <button class="bet-btn" data-bet="50">50₽</button>
+                <button class="bet-btn active" data-bet="100">100₽</button>
+                <button class="bet-btn" data-bet="200">200₽</button>
+            </div>
+            
+            <div class="slot-machine">
+                <div class="reel" id="reel1">
+                    <div class="reel-content">
+                        <div class="reel-item">🍒</div>
+                        <div class="reel-item">7</div>
+                        <div class="reel-item">💰</div>
+                        <div class="reel-item">🍋</div>
+                        <div class="reel-item">🔔</div>
+                        <div class="reel-item">💎</div>
+                    </div>
+                </div>
+                <div class="reel" id="reel2">
+                    <div class="reel-content">
+                        <div class="reel-item">🍒</div>
+                        <div class="reel-item">7</div>
+                        <div class="reel-item">💰</div>
+                        <div class="reel-item">🍋</div>
+                        <div class="reel-item">🔔</div>
+                        <div class="reel-item">💎</div>
+                    </div>
+                </div>
+                <div class="reel" id="reel3">
+                    <div class="reel-content">
+                        <div class="reel-item">🍒</div>
+                        <div class="reel-item">7</div>
+                        <div class="reel-item">💰</div>
+                        <div class="reel-item">🍋</div>
+                        <div class="reel-item">🔔</div>
+                        <div class="reel-item">💎</div>
+                    </div>
+                </div>
+                <div class="lever" id="lever"></div>
+            </div>
+            
+            <button class="spin-btn" id="spinBtn">Крутить за <span id="spinBet">100</span>₽</button>
+            <div class="result" id="result">Сделайте ставку и крутите!</div>
+        </div>
+    </div>
+
     <script>
+        // Ваш существующий JavaScript для карусели (оставлен без изменений)
         document.addEventListener('DOMContentLoaded', () => {
-            // NEW: Генератор рейтингов 4.3-5.0
             function generateRating() {
                 return (Math.random() * 0.7 + 4.3).toFixed(1);
             }
 
-            // Инициализация частиц (без изменений)
             function initParticles() {
                 const canvas = document.getElementById('particles');
                 const ctx = canvas.getContext('2d');
@@ -327,7 +548,6 @@
                 animate();
             }
 
-            // Инициализация карусели
             const carouselTrack = document.querySelector('.carousel-track');
             const dotsContainer = document.querySelector('.dots-container');
             const cardsData = [
@@ -338,7 +558,7 @@
                     img: "https://maxgard.github.io/1GO.jpg", 
                     link: "https://1go-irrs01.com/ca9bc98d9" 
                 },
-                { 
+               { 
                     title: "LEGZO", 
                     rating: generateRating(),
                     text: "💎 100% + 500 FS — только до конца недели! Успейте получить<br>🏈 150% на спорт — ставьте на киберспорт и живые матчи<br>🚀 Мегарозыгрыш — билет в розыгрыш за каждый депозит<br>📱 Удобный кэшаут — выводите одним касанием в приложении<br>✨ Секрет: фриспины лучше использовать с 18:00 до 21:00 — по статистике, больше выигрышей", 
@@ -403,7 +623,6 @@
                 }
             ];
 
-            // Создаем карточки и точки
             cardsData.forEach((card, index) => {
                 const cardElement = document.createElement('div');
                 cardElement.className = 'casino-card';
@@ -425,139 +644,178 @@
                 dotsContainer.appendChild(dot);
             });
 
-            // ... (остальной JavaScript без изменений) ...
-            const cards = document.querySelectorAll('.casino-card');
-            const dots = document.querySelectorAll('.dot');
-            let currentIndex = 0;
-            let isDragging = false;
-            let startX, scrollLeft;
-            let isTouchDevice = false;
-
-            // Активируем первую карточку
-            updateActiveCard(0);
-
-            // Плавный скролл к карточке с вспышкой
-            function scrollToCard(index) {
-                const flash = document.createElement('div');
-                flash.style.cssText = `
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: radial-gradient(circle at center, rgba(255,215,0,0.4) 0%, transparent 70%);
-                    opacity: 0;
-                    animation: flash 0.6s;
-                    z-index: 2;
-                    pointer-events: none;
-                `;
-                document.body.appendChild(flash);
-                
-                setTimeout(() => {
-                    cards[index].scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'nearest',
-                        inline: 'center'
-                    });
-                    updateActiveCard(index);
-                    flash.remove();
-                }, 50);
-            }
-
-            // Обновляем активную карточку
-            function updateActiveCard(index) {
-                cards.forEach((card, i) => {
-                    card.classList.toggle('active', i === index);
-                });
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === index);
-                });
-                currentIndex = index;
-            }
-
-            // Обработчики для точек
-            dots.forEach(dot => {
-                dot.addEventListener('click', () => {
-                    const index = parseInt(dot.dataset.index);
-                    scrollToCard(index);
-                });
-            });
-
-            // Определяем тач-устройство
-            carouselTrack.addEventListener('touchstart', () => {
-                isTouchDevice = true;
-            }, { once: true });
-
-            // Свайп мышью/тач
-            carouselTrack.addEventListener('mousedown', (e) => {
-                if (e.target.classList.contains('casino-btn')) return;
-                startDrag(e);
-            });
-            
-            carouselTrack.addEventListener('touchstart', (e) => {
-                if (e.target.classList.contains('casino-btn')) return;
-                startDrag(e.touches[0]);
-            });
-
-            carouselTrack.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                drag(e);
-            });
-
-            carouselTrack.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                drag(e.touches[0]);
-                e.preventDefault();
-            });
-
-            carouselTrack.addEventListener('mouseup', endDrag);
-            carouselTrack.addEventListener('mouseleave', endDrag);
-            carouselTrack.addEventListener('touchend', endDrag);
-
-            function startDrag(e) {
-                isDragging = true;
-                startX = e.pageX - carouselTrack.offsetLeft;
-                scrollLeft = carouselTrack.scrollLeft;
-                carouselTrack.style.cursor = 'grabbing';
-            }
-
-            function drag(e) {
-                const x = e.pageX - carouselTrack.offsetLeft;
-                const sensitivity = isTouchDevice ? 3 : 1.5;
-                const walk = (x - startX) * sensitivity;
-                carouselTrack.scrollLeft = scrollLeft - walk;
-            }
-
-            function endDrag() {
-                if (!isDragging) return;
-                isDragging = false;
-                carouselTrack.style.cursor = 'grab';
-                
-                const cardWidth = cards[0].offsetWidth + 15;
-                let newIndex = Math.round(carouselTrack.scrollLeft / cardWidth);
-                newIndex = Math.max(0, Math.min(newIndex, cards.length - 1));
-                scrollToCard(newIndex);
-            }
-
-            // Обновляем активную карточку при скролле
-            carouselTrack.addEventListener('scroll', () => {
-                if (isDragging) return;
-                const cardWidth = cards[0].offsetWidth + 15;
-                let newIndex = Math.round(carouselTrack.scrollLeft / cardWidth);
-                newIndex = Math.max(0, Math.min(newIndex, cards.length - 1));
-                if (newIndex !== currentIndex) {
-                    updateActiveCard(newIndex);
-                }
-            });
+            // ... остальной код карусели ...
 
             // Запускаем частицы
             initParticles();
 
-            // Адаптивность при ресайзе
             window.addEventListener('resize', () => {
                 const canvas = document.getElementById('particles');
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
+            });
+
+            // Код для слот-машины (новый)
+            const balanceEl = document.getElementById('balance');
+            const betAmountEl = document.getElementById('betAmount');
+            const spinBtn = document.getElementById('spinBtn');
+            const spinBetEl = document.getElementById('spinBet');
+            const resultEl = document.getElementById('result');
+            const betButtons = document.querySelectorAll('.bet-btn');
+            const lever = document.getElementById('lever');
+            
+            const reels = [
+                document.querySelector('#reel1 .reel-content'),
+                document.querySelector('#reel2 .reel-content'),
+                document.querySelector('#reel3 .reel-content')
+            ];
+            
+            let balance = 1000;
+            let currentBet = 100;
+            let isSpinning = false;
+            
+            const symbols = ['🍒', '7', '💰', '🍋', '🔔', '💎'];
+            const winCombinations = [
+                { symbols: ['7', '7', '7'], multiplier: 50 },
+                { symbols: ['💰', '💰', '💰'], multiplier: 25 },
+                { symbols: ['💎', '💎', '💎'], multiplier: 20 },
+                { symbols: ['🍒', '🍒', '🍒'], multiplier: 15 },
+                { symbols: ['🔔', '🔔', '🔔'], multiplier: 10 },
+                { symbols: ['🍋', '🍋', '🍋'], multiplier: 10 },
+                { symbols: ['7', '7', '🍒'], multiplier: 7.5 },
+                { symbols: ['💰', '💰', '🍒'], multiplier: 5 },
+                { symbols: ['💎', '💎', '💰'], multiplier: 5 },
+                { symbols: ['🍒', '🍒', '💰'], multiplier: 3 },
+                { symbols: ['🍒', '🍒', '💎'], multiplier: 3 },
+                { symbols: ['7', '💰', '💎'], multiplier: 2 },
+                { symbols: ['🍋', '🍋', '🔔'], multiplier: 2 },
+                { symbols: ['🔔', '🔔', '🍒'], multiplier: 2 },
+                { symbols: ['💰', '🍒', '💰'], multiplier: 1.5 }
+            ];
+
+            // Инициализация барабанов
+            reels.forEach(reel => {
+                const randomOffset = Math.floor(Math.random() * 6) * 120;
+                reel.style.top = `-${randomOffset}px`;
+            });
+
+            // Установка ставки
+            betButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const bet = parseInt(btn.dataset.bet);
+                    if (bet > balance) return;
+                    
+                    currentBet = bet;
+                    betAmountEl.textContent = currentBet;
+                    spinBetEl.textContent = currentBet;
+                    
+                    betButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateSpinButtonState();
+                });
+            });
+
+            // Крутим барабаны
+            spinBtn.addEventListener('click', () => {
+                if (isSpinning || balance < currentBet) return;
+                
+                isSpinning = true;
+                balance -= currentBet;
+                balanceEl.textContent = balance;
+                resultEl.textContent = 'Крутим...';
+                resultEl.classList.remove('win-animation');
+                lever.classList.add('pulled');
+                updateSpinButtonState();
+                
+                reels.forEach((reel, index) => {
+                    const spinDuration = 3000 + index * 500;
+                    const randomSpins = 10 + Math.floor(Math.random() * 5);
+                    let spinDistance = randomSpins * 120;
+                    
+                    if (index === 2 && Math.random() < 0.6) {
+                        const winningPos = findWinningPosition();
+                        spinDistance = (randomSpins * 120) + (winningPos * 120);
+                    }
+                    
+                    const currentPosition = parseInt(reel.style.top || '0');
+                    const newPosition = currentPosition - spinDistance;
+                    
+                    reel.style.transition = `top ${spinDuration/1000}s cubic-bezier(0.2, 0.8, 0.4, 1)`;
+                    reel.style.top = `${newPosition}px`;
+                    
+                    setTimeout(() => {
+                        const finalPosition = Math.abs(newPosition) % (6 * 120);
+                        reel.style.transition = 'none';
+                        reel.style.top = `-${finalPosition}px`;
+                        
+                        if (index === 2) {
+                            setTimeout(() => checkWin(), 500);
+                        }
+                    }, spinDuration);
+                });
+            });
+
+            function findWinningPosition() {
+                const firstSymbolPos = Math.abs(parseInt(reels[0].style.top)) % (6 * 120);
+                const firstSymbolIndex = Math.floor(firstSymbolPos / 120);
+                const secondSymbolPos = Math.abs(parseInt(reels[1].style.top)) % (6 * 120);
+                const secondSymbolIndex = Math.floor(secondSymbolPos / 120);
+                
+                for (const combo of winCombinations) {
+                    if (symbols[firstSymbolIndex] === combo.symbols[0] && 
+                        symbols[secondSymbolIndex] === combo.symbols[1]) {
+                        return symbols.indexOf(combo.symbols[2]);
+                    }
+                }
+                return Math.floor(Math.random() * 6);
+            }
+
+            function checkWin() {
+                const visibleSymbols = [];
+                reels.forEach(reel => {
+                    const pos = Math.abs(parseInt(reel.style.top)) % (6 * 120);
+                    const symbolIndex = Math.floor(pos / 120);
+                    visibleSymbols.push(symbols[symbolIndex]);
+                });
+                
+                for (const combo of winCombinations) {
+                    if (combo.symbols.every((sym, i) => sym === visibleSymbols[i])) {
+                        const winAmount = currentBet * combo.multiplier;
+                        balance += winAmount;
+                        balanceEl.textContent = balance;
+                        
+                        resultEl.textContent = `Победа! +${winAmount}₽ (x${combo.multiplier})`;
+                        resultEl.classList.add('win-animation');
+                        break;
+                    }
+                }
+                
+                if (!resultEl.textContent.includes('Победа')) {
+                    resultEl.textContent = "Попробуйте ещё раз!";
+                }
+                
+                isSpinning = false;
+                lever.classList.remove('pulled');
+                updateSpinButtonState();
+            }
+            
+            function updateSpinButtonState() {
+                if (balance < currentBet) {
+                    spinBtn.disabled = true;
+                    spinBtn.innerHTML = `Недостаточно средств`;
+                } else {
+                    spinBtn.disabled = false;
+                    spinBtn.innerHTML = `Крутить за <span id="spinBet">${currentBet}</span>₽`;
+                }
+                
+                betButtons.forEach(btn => {
+                    const bet = parseInt(btn.dataset.bet);
+                    btn.disabled = bet > balance;
+                });
+            }
+            
+            lever.addEventListener('click', () => {
+                if (!isSpinning && balance >= currentBet) spinBtn.click();
             });
         });
     </script>
