@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Рейтинг топ-казино 2024 + Слот-машина</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
     <style>
@@ -12,6 +12,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
             background: #0f0f1a;
@@ -19,6 +23,7 @@
             padding: 20px;
             overflow-x: hidden;
             user-select: none;
+            touch-action: pan-y;
         }
 
         body::before {
@@ -44,7 +49,7 @@
             100% { opacity: 0; transform: scale(1.5); }
         }
 
-        /* Карусель казино (ваш оригинальный код) */
+        /* Карусель казино */
         .carousel-container {
             width: 100%;
             max-width: 400px;
@@ -68,6 +73,7 @@
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
             cursor: grab;
+            touch-action: pan-y;
         }
 
         .carousel-track:active {
@@ -437,13 +443,13 @@
     </style>
 </head>
 <body>
-    <!-- Ваша оригинальная карусель казино -->
+    <!-- Карусель казино -->
     <div class="carousel-container">
         <div class="carousel-track"></div>
         <div class="dots-container"></div>
     </div>
 
-    <!-- Добавленная слот-машина -->
+    <!-- Слот-машина -->
     <div class="slot-machine-wrapper">
         <div class="slot-container">
             <h2 class="slot-title">🎰 Испытайте удачу!</h2>
@@ -503,12 +509,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Ваш оригинальный код карусели
+            // Генерация рейтинга
             function generateRating() {
                 return (Math.random() * 0.7 + 4.3).toFixed(1);
             }
 
-            // Инициализация частиц
+            // Частицы фона
             function initParticles() {
                 const canvas = document.getElementById('particles');
                 const ctx = canvas.getContext('2d');
@@ -563,7 +569,7 @@
                 animate();
             }
 
-            // Инициализация карусели
+            // Карусель казино
             const carouselTrack = document.querySelector('.carousel-track');
             const dotsContainer = document.querySelector('.dots-container');
             const cardsData = [
@@ -666,6 +672,7 @@
             let currentIndex = 0;
             let isDragging = false;
             let startX, scrollLeft;
+            let startY;
             let isTouchDevice = false;
 
             // Активируем первую карточку
@@ -741,9 +748,15 @@
 
             carouselTrack.addEventListener('touchmove', (e) => {
                 if (!isDragging) return;
-                drag(e.touches[0]);
-                e.preventDefault();
-            });
+                
+                const xDiff = Math.abs(e.touches[0].pageX - startX);
+                const yDiff = Math.abs(e.touches[0].pageY - startY);
+                
+                if (xDiff > yDiff) {
+                    e.preventDefault();
+                    drag(e.touches[0]);
+                }
+            }, { passive: false });
 
             carouselTrack.addEventListener('mouseup', endDrag);
             carouselTrack.addEventListener('mouseleave', endDrag);
@@ -752,15 +765,22 @@
             function startDrag(e) {
                 isDragging = true;
                 startX = e.pageX - carouselTrack.offsetLeft;
+                startY = e.pageY - carouselTrack.offsetTop;
                 scrollLeft = carouselTrack.scrollLeft;
                 carouselTrack.style.cursor = 'grabbing';
             }
 
             function drag(e) {
                 const x = e.pageX - carouselTrack.offsetLeft;
-                const sensitivity = isTouchDevice ? 3 : 1.5;
-                const walk = (x - startX) * sensitivity;
-                carouselTrack.scrollLeft = scrollLeft - walk;
+                const y = e.pageY - carouselTrack.offsetTop;
+                const xDiff = Math.abs(x - startX);
+                const yDiff = Math.abs(y - startY);
+                
+                if (xDiff > yDiff) {
+                    const sensitivity = isTouchDevice ? 3 : 1.5;
+                    const walk = (x - startX) * sensitivity;
+                    carouselTrack.scrollLeft = scrollLeft - walk;
+                }
             }
 
             function endDrag() {
@@ -788,7 +808,7 @@
             // Запускаем частицы
             initParticles();
 
-            // Код слот-машины
+            // Слот-машина
             const balanceEl = document.querySelector('.balance');
             const betAmountEl = document.querySelector('.bet-amount');
             const spinBtn = document.getElementById('spinBtn');
