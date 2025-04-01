@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const passiveOptions = supportsPassive ? { passive: true } : false;
     
+    // Initialize background particles
+    createBackgroundParticles();
+    
     // ============ CAROUSEL FUNCTIONALITY ============
     const track = document.getElementById('carousel-track');
     const cards = track.querySelectorAll('.casino-card');
@@ -436,3 +439,62 @@ document.addEventListener('DOMContentLoaded', function() {
         startX = null;
     }, passiveOptions);
 });
+
+// Функция для создания анимированных фоновых частиц
+function createBackgroundParticles() {
+    const container = document.getElementById('background-particles');
+    if (!container) return;
+    
+    const numParticles = window.innerWidth < 768 ? 20 : 40;
+    
+    // Создаем начальные частицы
+    for (let i = 0; i < numParticles; i++) {
+        createParticle(container);
+    }
+    
+    // Периодически добавляем новые частицы
+    setInterval(() => {
+        createParticle(container);
+        
+        // Удаляем старые частицы, чтобы не перегружать DOM
+        if (container.children.length > numParticles * 1.5) {
+            container.removeChild(container.firstChild);
+        }
+    }, 3000);
+}
+
+// Создание одной частицы
+function createParticle(container) {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    
+    // Случайный размер
+    const size = Math.random() * 6 + 2;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    
+    // Случайная позиция
+    const posX = Math.random() * window.innerWidth;
+    const posY = Math.random() * window.innerHeight;
+    particle.style.left = `${posX}px`;
+    particle.style.top = `${posY}px`;
+    
+    // Случайный цвет (оттенки золотого)
+    const hue = Math.random() * 30 + 40; // От желтого к оранжевому
+    particle.style.backgroundColor = `hsl(${hue}, 100%, 60%)`;
+    particle.style.boxShadow = `0 0 ${size * 2}px hsl(${hue}, 100%, 60%)`;
+    
+    // Случайная длительность анимации
+    const duration = Math.random() * 10 + 15;
+    particle.style.animationDuration = `${duration}s`;
+    
+    // Добавляем в контейнер
+    container.appendChild(particle);
+    
+    // Удаляем элемент после завершения анимации
+    setTimeout(() => {
+        if (particle.parentNode === container) {
+            container.removeChild(particle);
+        }
+    }, duration * 1000);
+}
