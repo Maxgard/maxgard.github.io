@@ -41,6 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add mouse event handlers for desktop dragging
     track.addEventListener('mousedown', e => {
+        // Don't start dragging if clicking on a link/button
+        if (e.target.closest('.casino-link, .casino-btn')) return;
+        
         isDragging = true;
         startPosition = e.pageX;
         startScrollLeft = track.scrollLeft;
