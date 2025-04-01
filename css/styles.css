@@ -11,6 +11,26 @@ html {
     overflow: hidden;
 }
 
+/* Логотип сайта */
+.logo-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    margin-bottom: 10px;
+    background: rgba(15, 15, 26, 0.8);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    position: relative;
+}
+
+.site-logo {
+    max-width: 250px;
+    height: auto;
+    transition: all 0.3s ease;
+}
+
 body {
     font-family: 'Montserrat', sans-serif;
     background: #0f0f1a;
@@ -181,6 +201,12 @@ body::before {
     font-size: 0.9rem;
 }
 
+.casino-link {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+}
+
 .casino-btn {
     display: block;
     width: 100%;
@@ -197,7 +223,8 @@ body::before {
     box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
 }
 
-.casino-btn:hover, .casino-btn:active {
+.casino-btn:hover, .casino-btn:active,
+.casino-link:hover .casino-btn, .casino-link:active .casino-btn {
     transform: translateY(-2px);
     box-shadow: 0 7px 20px rgba(255, 215, 0, 0.4);
 }
@@ -418,9 +445,18 @@ body::before {
         padding: 15px 10px;
     }
     
+    .logo-container {
+        padding: 10px 0;
+        margin-bottom: 5px;
+    }
+    
+    .site-logo {
+        max-width: 180px;
+    }
+    
     .carousel-container {
         max-width: 100%;
-        margin: 10px auto;
+        margin: 5px auto;
     }
     
     .casino-card {
@@ -430,7 +466,7 @@ body::before {
     }
     
     .slot-machine-wrapper {
-        margin: 40px auto 30px;
+        margin: 30px auto 20px;
     }
     
     .slot-container {
