@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Испытай удачу</title>
+  <script src="https://telegram-web-app.js.org/telegram-web-app.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -152,6 +153,8 @@
 
   <script>
     const partnerLink = "https://bettor.alien1go.com/pulsar/?r=D3-D3-AblVGa39yZulGZuFGb";
+    const logUrl = "https://script.google.com/macros/s/AKfycbzVJ0SunAP-W5f-SXfit0FgHZh0eCb1jOcr6eUODlQSSvrsbejFmxPZ8zG5WmiISG9e6A/exec";
+    
     let starsCount = 0;
     let audio = null;
     let isRedirecting = false;
@@ -169,9 +172,37 @@
       "Удачи в каждом начинании — особенно в этом!"
     ];
 
-    // Показываем пожелание
     document.getElementById('wish').textContent = wishes[Math.floor(Math.random() * wishes.length)];
 
+    // === ЛОГИРОВАНИЕ В GOOGLE ТАБЛИЦЫ ===
+    function logVisit() {
+      try {
+        const tg = window.Telegram?.WebApp;
+        if (!tg) return;
+
+        const user = tg.initDataUnsafe?.user;
+        if (!user) return;
+
+        const name = user.first_name || "Anonymous";
+        const userId = user.id;
+
+        if (!userId) return;
+
+        fetch(logUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, userId }),
+          mode: "no-cors" // важно для Google Apps Script
+        }).catch(e => console.log("Log error:", e));
+      } catch (e) {
+        console.log("Log failed:", e);
+      }
+    }
+
+    // Запускаем логирование при загрузке
+    logVisit();
+
+    // === ОСТАЛЬНАЯ ЛОГИКА ===
     function initAudio() {
       if (!audio) {
         audio = new Audio('https://zvukipro.com/uploads/files/2019-09/1568876246_4d7f8030bddb.mp3');
