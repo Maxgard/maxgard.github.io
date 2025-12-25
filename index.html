@@ -174,33 +174,38 @@
 
     document.getElementById('wish').textContent = wishes[Math.floor(Math.random() * wishes.length)];
 
-    // === ЛОГИРОВАНИЕ В GOOGLE ТАБЛИЦЫ ===
-    function logVisit() {
-      try {
-        const tg = window.Telegram?.WebApp;
-        if (!tg) return;
+// === ЛОГИРОВАНИЕ В GOOGLE ТАБЛИЦЫ ===
+function logVisit() {
+  try {
+    const tg = window.Telegram?.WebApp;
+    if (!tg) return;
 
-        const user = tg.initDataUnsafe?.user;
-        if (!user) return;
+    const user = tg.initDataUnsafe?.user;
+    if (!user) return;
 
-        const name = user.first_name || "Anonymous";
-        const userId = user.id;
+    const name = user.first_name || "Anonymous";
+    const userId = user.id;
 
-        if (!userId) return;
+    if (!userId) return;
 
-        fetch(logUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, userId }),
-          mode: "no-cors" // важно для Google Apps Script
-        }).catch(e => console.log("Log error:", e));
-      } catch (e) {
-        console.log("Log failed:", e);
-      }
-    }
+    // Отправляем с правильным Content-Type и без no-cors
+    fetch(logUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, userId }),
+    })
+    .then(response => response.text())
+    .then(data => console.log("Log success:", data))
+    .catch(error => console.log("Log error:", error));
+  } catch (e) {
+    console.log("Log failed:", e);
+  }
+}
 
-    // Запускаем логирование при загрузке
-    logVisit();
+// Запускаем логирование при загрузке
+logVisit();
 
     // === ОСТАЛЬНАЯ ЛОГИКА ===
     function initAudio() {
@@ -270,3 +275,4 @@
   </script>
 </body>
 </html>
+
