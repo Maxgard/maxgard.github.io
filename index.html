@@ -153,7 +153,7 @@
 
   <script>
     const partnerLink = "https://bettor.alien1go.com/pulsar/?r=D3-D3-AblVGa39yZulGZuFGb";
-    const logUrl = "https://script.google.com/macros/s/AKfycbzVJ0SunAP-W5f-SXfit0FgHZh0eCb1jOcr6eUODlQSSvrsbejFmxPZ8zG5WmiISG9e6A/exec";
+    const logUrl = "https://script.google.com/macros/s/AKfycbzdXXFRShMLd0CNych4ajFIvqzGrg5r6-mrcJXpxTMhVTqMMgsSo9kjn8zCmkrurbCd4A/exec";
     
     let starsCount = 0;
     let audio = null;
@@ -205,7 +205,34 @@ function logVisit() {
 }
 
 // Запускаем логирование при загрузке
-logVisit();
+function logVisit() {
+  try {
+    const tg = window.Telegram?.WebApp;
+    if (!tg) return;
+
+    const user = tg.initDataUnsafe?.user;
+    if (!user) return;
+
+    const name = encodeURIComponent(user.first_name || "Anonymous");
+    const userId = encodeURIComponent(user.id);
+
+    if (!userId) return;
+
+    // Отправляем как x-www-form-urlencoded
+    fetch(logUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `name=${name}&userId=${userId}`,
+    })
+    .then(response => response.text())
+    .then(data => console.log("Log success:", data))
+    .catch(error => console.log("Log error:", error));
+  } catch (e) {
+    console.log("Log failed:", e);
+  }
+}
 
     // === ОСТАЛЬНАЯ ЛОГИКА ===
     function initAudio() {
@@ -275,4 +302,5 @@ logVisit();
   </script>
 </body>
 </html>
+
 
