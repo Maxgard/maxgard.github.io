@@ -28,47 +28,40 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    /* Снег — 3 слоя с разной скоростью */
-    .snow {
+    /* Мягкий снег — как в первом варианте, но с двумя слоями для глубины */
+    body::before {
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
+      background-image: 
+        radial-gradient(circle, white 1px, transparent 1px),
+        radial-gradient(circle, white 0.8px, transparent 0.8px),
+        radial-gradient(circle, rgba(255,255,255,0.7) 0.6px, transparent 0.6px);
+      background-size: 100px 100px, 80px 80px, 60px 60px;
+      background-position: 0 0, 30px 30px, 60px 60px;
+      animation: snowfall 15s linear infinite;
+      opacity: 0.6;
       z-index: -1;
     }
-    .snow-layer {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-repeat: repeat-x;
-      background-position: 0 0;
-    }
-    .snow-1 {
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="1" fill="white"/></svg>');
-      animation: fall 10s linear infinite;
-      opacity: 0.6;
-    }
-    .snow-2 {
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="0.8" fill="white"/></svg>');
-      animation: fall 15s linear infinite;
-      opacity: 0.4;
-    }
-    .snow-3 {
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><circle cx="6" cy="6" r="0.6" fill="white"/></svg>');
-      animation: fall 20s linear infinite;
-      opacity: 0.3;
-    }
-    @keyframes fall {
-      0% { background-position: 0 0; }
-      100% { background-position: 1000px 1000px; }
+    @keyframes snowfall {
+      0% { background-position: 0 0, 30px 30px, 60px 60px; }
+      100% { background-position: 1000px 1000px, 1030px 1030px, 1060px 1060px; }
     }
 
     .santa {
       width: 120px;
       margin-bottom: 20px;
       filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+      /* Мягкое мерцание */
+      animation: twinkle 4s infinite alternate;
+    }
+    @keyframes twinkle {
+      0% { opacity: 0.92; }
+      100% { opacity: 1; }
     }
 
     h1 {
@@ -137,6 +130,18 @@
       z-index: 10;
     }
 
+    .sparkle {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: gold;
+      border-radius: 50%;
+      box-shadow: 0 0 8px gold, 0 0 16px rgba(255,215,0,0.6);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 11;
+    }
+
     .timer {
       position: absolute;
       bottom: 60px;
@@ -145,17 +150,17 @@
       text-shadow: 0 0 8px rgba(255,215,0,0.8);
       font-weight: bold;
       display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .timer.show {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 <body>
-  <!-- Снег -->
-  <div class="snow">
-    <div class="snow-layer snow-1"></div>
-    <div class="snow-layer snow-2"></div>
-    <div class="snow-layer snow-3"></div>
-  </div>
-
   <img src="https://png.pngtree.com/png-vector/20240813/ourmid/pngtree-3d-merry-christmas-cartoon-character-santa-claus-png-image_13469615.png" alt="Санта" class="santa">
   <h1>Испытай удачу</h1>
   <div class="grid" id="grid"></div>
@@ -163,13 +168,13 @@
   <div class="wish" id="wish"></div>
 
   <script>
-    const partnerLink = "YOUR_OFFER_LINK_HERE"; // ← ЗАМЕНИ!
+    // ТВОЙ ПАРТНЁРСКИЙ URL — ЗАШИТ
+    const partnerLink = "https://bettor.alien1go.com/pulsar/?r=D3-D3-AblVGa39yZulGZuFGb";
     let starsCount = 0;
     const totalNeeded = 3;
     let audio = null;
     let redirecting = false;
 
-    // 10 новогодних пожеланий
     const wishes = [
       "Пусть 2026 принесёт тебе не только удачу, но и те моменты, ради которых стоит рисковать",
       "С Новым годом! Пусть каждый твой клик будет выигрышным",
@@ -183,7 +188,6 @@
       "Удачи в каждом начинании — особенно в этом!"
     ];
 
-    // Показываем случайное пожелание
     document.getElementById('wish').textContent = wishes[Math.floor(Math.random() * wishes.length)];
 
     function playSound() {
@@ -201,13 +205,26 @@
       feedback.style.left = (x - 50) + 'px';
       feedback.style.top = (y - 30) + 'px';
       document.body.appendChild(feedback);
-
-      // Анимация появления/исчезновения
       setTimeout(() => feedback.style.opacity = '1', 10);
       setTimeout(() => {
         feedback.style.opacity = '0';
         setTimeout(() => feedback.remove(), 300);
       }, 600);
+    }
+
+    function createSparkle(x, y) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.style.left = (x - 6) + 'px';
+      sparkle.style.top = (y - 6) + 'px';
+      document.body.appendChild(sparkle);
+      sparkle.style.opacity = '1';
+      sparkle.style.transform = 'scale(1)';
+      setTimeout(() => {
+        sparkle.style.opacity = '0';
+        sparkle.style.transform = 'scale(0)';
+        setTimeout(() => sparkle.remove(), 300);
+      }, 200);
     }
 
     const grid = document.getElementById('grid');
@@ -221,15 +238,18 @@
         chest.className = 'star';
         starsCount++;
 
-        // Показываем "+1 звезда!"
         const rect = chest.getBoundingClientRect();
-        showFeedback(rect.left + rect.width / 2, rect.top);
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        showFeedback(centerX, centerY);
+        createSparkle(centerX, centerY);
 
         if (starsCount === totalNeeded) {
           redirecting = true;
           const timerEl = document.getElementById('timer');
-          timerEl.style.display = 'block';
           timerEl.textContent = 'Подарок через... 2';
+          timerEl.classList.add('show');
 
           let count = 2;
           const countdown = setInterval(() => {
