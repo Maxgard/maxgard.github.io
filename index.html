@@ -153,8 +153,40 @@
 
   <script>
     const partnerLink = "https://1go-blrs10.com/cc9df3f6c";
-    const logUrl = "hthttps://script.google.com/macros/s/AKfycbwdNN16F2prGZa8iZOOFXd_-bTWdh24LFo2Z1NyrA723HGUbLj5ZEVD1aTxMnYtO95OQQ/exec";
-    
+
+    // === ЛОГИРОВАНИЕ В ТЕЛЕГРАМ ===
+    function logVisit() {
+      try {
+        const tg = window.Telegram?.WebApp;
+        if (!tg) return;
+
+        const user = tg.initDataUnsafe?.user;
+        if (!user || !user.id) return;
+
+        const name = user.first_name || "—";
+        const userId = user.id;
+        const now = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow" });
+
+        // Формируем текст сообщения
+        const messageText = `ID: ${userId} | Имя: ${name} | Заход: ${now}`;
+        
+        // Кодируем текст для URL
+        const encodedText = encodeURIComponent(messageText);
+        
+        // URL твоего бота
+        const logUrl = `https://api.telegram.org/bot8088104555:AAEd_z-a68m4OQLvevMxelc8dxX4h-ZPIFI/sendMessage?chat_id=239300363&text=${encodedText}`;
+
+        // Отправляем фоном
+        fetch(logUrl, { mode: "no-cors" }).catch(() => {});
+      } catch (e) {
+        console.log("Log failed:", e);
+      }
+    }
+
+    // Запускаем логирование при загрузке
+    logVisit();
+
+    // === ОСТАЛЬНАЯ ЛОГИКА ===
     let starsCount = 0;
     let audio = null;
     let isRedirecting = false;
@@ -174,64 +206,6 @@
 
     document.getElementById('wish').textContent = wishes[Math.floor(Math.random() * wishes.length)];
 
-// === ЛОГИРОВАНИЕ В GOOGLE ТАБЛИЦЫ ===
-function logVisit() {
-  try {
-    const tg = window.Telegram?.WebApp;
-    if (!tg) return;
-
-    const user = tg.initDataUnsafe?.user;
-    if (!user) return;
-
-    const name = user.first_name || "Anonymous";
-    const userId = user.id;
-
-    if (!userId) return;
-
-    // Отправляем с правильным Content-Type и без no-cors
-    fetch(logUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, userId }),
-    })
-    .then(response => response.text())
-    .then(data => console.log("Log success:", data))
-    .catch(error => console.log("Log error:", error));
-  } catch (e) {
-    console.log("Log failed:", e);
-  }
-}
-
-// Запускаем логирование при загрузке
-function logVisit() {
-  try {
-    const tg = window.Telegram?.WebApp;
-    if (!tg) return;
-
-    const user = tg.initDataUnsafe?.user;
-    if (!user) return;
-
-    const name = encodeURIComponent(user.first_name || "Anonymous");
-    const userId = encodeURIComponent(user.id);
-
-    if (!userId) return;
-
-    // Отправляем GET-запрос
-    fetch(`${logUrl}?name=${name}&userId=${userId}`, {
-      method: "GET",
-      mode: "no-cors" // можно оставить, так как GET не требует CORS для логирования
-    })
-    .then(response => response.text())
-    .then(data => console.log("Log success:", data))
-    .catch(error => console.log("Log error:", error));
-  } catch (e) {
-    console.log("Log failed:", e);
-  }
-}
-
-    // === ОСТАЛЬНАЯ ЛОГИКА ===
     function initAudio() {
       if (!audio) {
         audio = new Audio('https://zvukipro.com/uploads/files/2019-09/1568876246_4d7f8030bddb.mp3');
@@ -299,7 +273,3 @@ function logVisit() {
   </script>
 </body>
 </html>
-
-
-
-
