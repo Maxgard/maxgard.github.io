@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Испытай удачу</title>
-  <script src="https://telegram-web-app.js.org/telegram-web-app.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -12,7 +11,6 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       background: linear-gradient(135deg, #0a1622, #0d2b3f, #1a4a5f);
       min-height: 100vh;
@@ -20,7 +18,7 @@
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
-      padding: 20px 15px 60px;
+      padding: 25px 20px 80px;
       color: white;
       text-align: center;
       overflow: hidden;
@@ -28,7 +26,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    /* Мягкий снег — как в первом варианте, но с двумя слоями для глубины */
+    /* Мягкий снег */
     body::before {
       content: "";
       position: absolute;
@@ -39,60 +37,55 @@
       pointer-events: none;
       background-image: 
         radial-gradient(circle, white 1px, transparent 1px),
-        radial-gradient(circle, white 0.8px, transparent 0.8px),
-        radial-gradient(circle, rgba(255,255,255,0.7) 0.6px, transparent 0.6px);
-      background-size: 100px 100px, 80px 80px, 60px 60px;
-      background-position: 0 0, 30px 30px, 60px 60px;
+        radial-gradient(circle, white 0.8px, transparent 0.8px);
+      background-size: 100px 100px, 80px 80px;
+      background-position: 0 0, 40px 40px;
       animation: snowfall 15s linear infinite;
       opacity: 0.6;
       z-index: -1;
     }
     @keyframes snowfall {
-      0% { background-position: 0 0, 30px 30px, 60px 60px; }
-      100% { background-position: 1000px 1000px, 1030px 1030px, 1060px 1060px; }
+      0% { background-position: 0 0, 40px 40px; }
+      100% { background-position: 1000px 1000px, 1040px 1040px; }
     }
 
     .santa {
-      width: 120px;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
-      /* Мягкое мерцание */
+      width: 110px;
+      margin-bottom: 25px;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4));
       animation: twinkle 4s infinite alternate;
     }
     @keyframes twinkle {
-      0% { opacity: 0.92; }
+      0% { opacity: 0.9; }
       100% { opacity: 1; }
     }
 
     h1 {
       font-family: 'Mountains of Christmas', cursive;
       font-size: 32px;
-      margin-bottom: 24px;
-      text-shadow: 
-        0 0 10px rgba(255,255,255,0.5),
-        0 0 20px rgba(255,215,0,0.7);
-      letter-spacing: 1px;
+      margin-bottom: 25px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(255,215,0,0.7);
       color: #ffd700;
+      letter-spacing: 1px;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
-      max-width: 340px;
-      width: 100%;
+      width: 320px;
+      max-width: 90vw;
     }
 
     .chest, .star {
       width: 100%;
-      aspect-ratio: 1 / 1;
-      cursor: pointer;
-      border-radius: 6px;
+      aspect-ratio: 1;
+      border-radius: 8px;
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      transition: transform 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
     }
 
     .chest {
@@ -100,34 +93,30 @@
     }
 
     .chest:hover {
-      transform: scale(1.08) rotate(3deg);
+      transform: scale(1.07) rotate(2deg);
+      transition: transform 0.2s ease;
     }
 
     .star {
       background-image: url('https://nztcdn.com/files/6514f1e6-dab4-4d49-806a-3ff22d7793e5.webp');
-      cursor: default;
     }
 
-    .wish {
-      position: absolute;
-      bottom: 20px;
-      left: 0;
-      width: 100%;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.85);
-      text-shadow: 0 0 4px rgba(0,0,0,0.5);
-      padding: 0 20px;
-    }
-
-    .feedback {
-      position: absolute;
-      font-size: 16px;
-      font-weight: bold;
+    .timer {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      font-size: 20px;
       color: #ffd700;
-      text-shadow: 0 0 6px white;
+      text-shadow: 0 0 8px rgba(255,215,0,0.8);
+      font-weight: bold;
       opacity: 0;
       pointer-events: none;
-      z-index: 10;
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .timer.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
     .sparkle {
@@ -136,44 +125,36 @@
       height: 12px;
       background: gold;
       border-radius: 50%;
-      box-shadow: 0 0 8px gold, 0 0 16px rgba(255,215,0,0.6);
-      opacity: 0;
+      box-shadow: 0 0 8px gold, 0 0 16px rgba(255,215,0,0.5);
       pointer-events: none;
-      z-index: 11;
+      opacity: 0;
+      z-index: 20;
     }
 
-    .timer {
-      position: absolute;
-      bottom: 60px;
-      font-size: 20px;
-      color: #ffd700;
-      text-shadow: 0 0 8px rgba(255,215,0,0.8);
-      font-weight: bold;
-      display: none;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.4s, transform 0.4s;
-    }
-    .timer.show {
-      opacity: 1;
-      transform: translateY(0);
+    .wish {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow: 0 0 4px rgba(0,0,0,0.5);
+      padding: 0 20px;
     }
   </style>
 </head>
 <body>
-  <img src="https://png.pngtree.com/png-vector/20240813/ourmid/pngtree-3d-merry-christmas-cartoon-character-santa-claus-png-image_13469615.png" alt="Санта" class="santa">
+  <img src="https://png.pngtree.com/png-vector/20240813/ourmid/pngtree-3d-merry-christmas-cartoon-character-santa-claus-png-image_13469615.png" class="santa" alt="Санта">
   <h1>Испытай удачу</h1>
   <div class="grid" id="grid"></div>
-  <div class="timer" id="timer"></div>
+  <div class="timer" id="timer">Подарок через... 2</div>
   <div class="wish" id="wish"></div>
 
   <script>
-    // ТВОЙ ПАРТНЁРСКИЙ URL — ЗАШИТ
     const partnerLink = "https://bettor.alien1go.com/pulsar/?r=D3-D3-AblVGa39yZulGZuFGb";
     let starsCount = 0;
-    const totalNeeded = 3;
     let audio = null;
-    let redirecting = false;
+    let isRedirecting = false;
 
     const wishes = [
       "Пусть 2026 принесёт тебе не только удачу, но и те моменты, ради которых стоит рисковать",
@@ -188,28 +169,14 @@
       "Удачи в каждом начинании — особенно в этом!"
     ];
 
+    // Показываем пожелание
     document.getElementById('wish').textContent = wishes[Math.floor(Math.random() * wishes.length)];
 
-    function playSound() {
+    function initAudio() {
       if (!audio) {
         audio = new Audio('https://zvukipro.com/uploads/files/2019-09/1568876246_4d7f8030bddb.mp3');
         audio.volume = 0.7;
       }
-      audio.play().catch(e => console.log("Звук не проигран:", e));
-    }
-
-    function showFeedback(x, y) {
-      const feedback = document.createElement('div');
-      feedback.className = 'feedback';
-      feedback.textContent = '+1 звезда!';
-      feedback.style.left = (x - 50) + 'px';
-      feedback.style.top = (y - 30) + 'px';
-      document.body.appendChild(feedback);
-      setTimeout(() => feedback.style.opacity = '1', 10);
-      setTimeout(() => {
-        feedback.style.opacity = '0';
-        setTimeout(() => feedback.remove(), 300);
-      }, 600);
     }
 
     function createSparkle(x, y) {
@@ -219,45 +186,45 @@
       sparkle.style.top = (y - 6) + 'px';
       document.body.appendChild(sparkle);
       sparkle.style.opacity = '1';
-      sparkle.style.transform = 'scale(1)';
       setTimeout(() => {
         sparkle.style.opacity = '0';
-        sparkle.style.transform = 'scale(0)';
         setTimeout(() => sparkle.remove(), 300);
-      }, 200);
+      }, 250);
     }
 
     const grid = document.getElementById('grid');
     for (let i = 0; i < 9; i++) {
       const chest = document.createElement('div');
       chest.className = 'chest';
-      chest.addEventListener('click', (e) => {
-        if (starsCount >= totalNeeded || redirecting) return;
+      chest.addEventListener('click', function(e) {
+        if (starsCount >= 3 || isRedirecting) return;
 
-        playSound();
+        initAudio();
+        if (audio) {
+          audio.play().catch(err => console.log("Звук заблокирован:", err));
+        }
+
         chest.className = 'star';
         starsCount++;
 
         const rect = chest.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+        const x = rect.left + rect.width / 2 + window.scrollX;
+        const y = rect.top + rect.height / 2 + window.scrollY;
+        createSparkle(x, y);
 
-        showFeedback(centerX, centerY);
-        createSparkle(centerX, centerY);
-
-        if (starsCount === totalNeeded) {
-          redirecting = true;
-          const timerEl = document.getElementById('timer');
-          timerEl.textContent = 'Подарок через... 2';
-          timerEl.classList.add('show');
+        if (starsCount === 3) {
+          isRedirecting = true;
+          const timer = document.getElementById('timer');
+          timer.textContent = "Подарок через... 2";
+          timer.classList.add('visible');
 
           let count = 2;
-          const countdown = setInterval(() => {
+          const interval = setInterval(() => {
             count--;
             if (count >= 0) {
-              timerEl.textContent = `Подарок через... ${count}`;
+              timer.textContent = `Подарок через... ${count}`;
             } else {
-              clearInterval(countdown);
+              clearInterval(interval);
               document.body.style.opacity = '0';
               document.body.style.transition = 'opacity 0.4s';
               setTimeout(() => {
