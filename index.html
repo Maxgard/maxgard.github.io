@@ -1,213 +1,106 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Рейтинг топ-казино 2024 + Слот-машина</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Испытай удачу</title>
+  <script src="https://telegram-web-app.js.org/telegram-web-app.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #0c1e29, #1a3a4a, #2b5266);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 20px 15px 30px;
+      color: white;
+      text-align: center;
+    }
+    .santa {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 24px;
+      text-shadow: 0 0 8px rgba(255,215,0,0.6);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      max-width: 340px;
+      width: 100%;
+    }
+    .chest, .star {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      border-radius: 6px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .chest {
+      background-image: url('https://freesvg.org/img/xmas02.png');
+      transition: transform 0.2s, filter 0.2s;
+    }
+    .chest:hover {
+      transform: scale(1.05);
+      filter: brightness(1.2);
+    }
+    .star {
+      background-image: url('https://nztcdn.com/files/6514f1e6-dab4-4d49-806a-3ff22d7793e5.webp');
+      cursor: default;
+    }
+  </style>
 </head>
 <body>
-    <!-- Анимированный заголовок -->
-    <div class="animated-title-container">
-        <h1 class="animated-title">
-            <span class="title-word">Рейтинг</span>
-            <span class="title-word">Казино</span>
-            <span class="title-word">2025</span>
-        </h1>
-    </div>
-    
-    <!-- Частицы фона -->
-    <div id="background-particles"></div>
-    
-    <!-- Карусель казино -->
-    <div class="carousel-container">
-        <div class="carousel-track" id="carousel-track">
-            <div class="casino-card" data-id="1">
-                <h2>LEGZO</h2>
-                <div class="rating-container">
-                    <div class="rating-stars" style="--rating: 4.9"></div>
-                    <span class="rating-value">4.9</span>
-                </div>
-                <img src="https://maxgard.github.io/LEGZO.jpg" class="casino-image" alt="Казино LEGZO">
-                <p class="casino-text">💎 100% + 500 FS — только до конца недели!<br>🏈 150% на спорт — ставьте на киберспорт<br>🚀 Мегарозыгрыш — билет за каждый депозит</p>
-                <a href="https://gzo-irrs01.com/cb1972964" target="_blank" class="casino-link">
-                    <button class="casino-btn">ИГРАТЬ СЕЙЧАС</button>
-                </a>
-            </div>
-            
-            <div class="casino-card" data-id="2">
-                <h2>ROX</h2>
-                <div class="rating-container">
-                    <div class="rating-stars" style="--rating: 4.8"></div>
-                    <span class="rating-value">4.8</span>
-                </div>
-                <img src="https://maxgard.github.io/ROX.jpg" class="casino-image" alt="Казино ROX">
-                <p class="casino-text">🚀 150% бонус — стартуйте с удвоенным банком!<br>✨ 500 фриспинов на популярные слоты<br>🎯 Турниры с призовым фондом 5 000 000₽</p>
-                <a href="https://rox-fwuocypyjf.com/c55dfe2b7" target="_blank" class="casino-link">
-                    <button class="casino-btn">ИГРАТЬ СЕЙЧАС</button>
-                </a>
-            </div>
-            
-            <div class="casino-card" data-id="3">
-                <h2>VOLNA</h2>
-                <div class="rating-container">
-                    <div class="rating-stars" style="--rating: 4.7"></div>
-                    <span class="rating-value">4.7</span>
-                </div>
-                <img src="https://maxgard.github.io/VOLNA.jpg" class="casino-image" alt="Казино VOLNA">
-                <p class="casino-text">🔥 200% + 400 FS — выгодное предложение<br>🔐 ЛИЦЕНЗИЯ Curacao — гарантия честной игры<br>🏆 КЭШБЭК 7% — возврат еженедельно</p>
-                <a href="https://vln-irrs01.com/c4801ddda" target="_blank" class="casino-link">
-                    <button class="casino-btn">ИГРАТЬ СЕЙЧАС</button>
-                </a>
-            </div>
-            
-            <div class="casino-card" data-id="4">
-                <h2>LEX</h2>
-                <div class="rating-container">
-                    <div class="rating-stars" style="--rating: 4.6"></div>
-                    <span class="rating-value">4.6</span>
-                </div>
-                <img src="https://maxgard.github.io/LEX.jpg" class="casino-image" alt="Казино LEX">
-                <p class="casino-text">🏆 ДО 45 000₽ + 400 FS — лучший пакет<br>🔒 SSL-ШИФРОВАНИЕ — защита данных<br>💎 10% КЭШБЭК — компенсация ставок</p>
-                <a href="https://lex-blrs21.com/ca3b0c6d7" target="_blank" class="casino-link">
-                    <button class="casino-btn">ИГРАТЬ СЕЙЧАС</button>
-                </a>
-            </div>
-            
-            <div class="casino-card" data-id="5">
-                <h2>DRIP</h2>
-                <div class="rating-container">
-                    <div class="rating-stars" style="--rating: 4.7"></div>
-                    <span class="rating-value">4.7</span>
-                </div>
-                <img src="https://maxgard.github.io/DRIP.jpg" class="casino-image" alt="Казино DRIP">
-                <p class="casino-text">✨ 45 000₽ WELCOME PACKAGE + 325 FS<br>🎾 150% SPORTS BONUS — для высоких ставок<br>🚀 INSTANT 7-MIN PAYOUTS — быстрые выплаты</p>
-                <a href="https://drp-irrs12.com/c60044ec7" target="_blank" class="casino-link">
-                    <button class="casino-btn">ИГРАТЬ СЕЙЧАС</button>
-                </a>
-            </div>
-            
-            <div class="casino-card" data-id="6">
-                <h2>MONRO</h2>
-                <div class="rating-container">
-                    <div class="rating-stars" style="--rating: 4.8"></div>
-                    <span class="rating-value">4.8</span>
-                </div>
-                <img src="https://maxgard.github.io/MONRO.jpg" class="casino-image" alt="Казино MONRO">
-                <p class="casino-text">🎩 150% БОНУС — получите до 80 000₽!<br>🎰 200 ФРИСПИНОВ — игра без риска<br>⚡️ МГНОВЕННЫЕ ВЫПЛАТЫ — за 1 минуту</p>
-                <a href="https://mnr-irrs12.com/c074f4b10" target="_blank" class="casino-link">
-                    <button class="casino-btn">ИГРАТЬ СЕЙЧАС</button>
-                </a>
-            </div>
-            
-            <div class="casino-card" data-id="7">
-                <h2>FRESH</h2>
-                <div class="rating-container">
-                    <div class="rating-stars" style="--rating: 4.9"></div>
-                    <span class="rating-value">4.9</span>
-                </div>
-                <img src="https://maxgard.github.io/FRESH.jpg" class="casino-image" alt="Казино FRESH">
-                <p class="casino-text">🍀 30 000₽ + 500 ФРИСПИНОВ — сочный старт!<br>🎰 Популярные слоты от лучших провайдеров<br>⚡ Вывод от 30 секунд — рекордная скорость</p>
-                <a href="https://fresh-sfgjhyrt02.com/c78005b83" target="_blank" class="casino-link">
-                    <button class="casino-btn">ИГРАТЬ СЕЙЧАС</button>
-                </a>
-            </div>
-            
-            <div class="casino-card" data-id="8">
-                <h2>IZZI</h2>
-                <div class="rating-container">
-                    <div class="rating-stars" style="--rating: 4.6"></div>
-                    <span class="rating-value">4.6</span>
-                </div>
-                <img src="https://maxgard.github.io/IZZI.jpg" class="casino-image" alt="Казино IZZI">
-                <p class="casino-text">🚀 30K₽ + 500 FS — инновационный пакет<br>🤖 AI-подбор слотов — умная система<br>📱 PWA-приложение — не грузит память</p>
-                <a href="https://izzi-irrs01.com/c60910a32" target="_blank" class="casino-link">
-                    <button class="casino-btn">ИГРАТЬ СЕЙЧАС</button>
-                </a>
-            </div>
-        </div>
-        
-        <div class="dots-container" id="carousel-dots">
-            <span class="dot active" data-id="1"></span>
-            <span class="dot" data-id="2"></span>
-            <span class="dot" data-id="3"></span>
-            <span class="dot" data-id="4"></span>
-            <span class="dot" data-id="5"></span>
-            <span class="dot" data-id="6"></span>
-            <span class="dot" data-id="7"></span>
-            <span class="dot" data-id="8"></span>
-        </div>
-    </div>
-    
-    <!-- Слот-машина -->
-    <div class="slot-machine-wrapper">
-        <div class="slot-container">
-            <h2 class="slot-title">ИСПЫТАЙ УДАЧУ</h2>
-            
-            <div class="balance-container">
-                <div>Баланс: <span class="balance" id="balance">1000</span> ₽</div>
-                <div>Ставка: <span class="bet-amount" id="bet-amount">100</span> ₽</div>
-            </div>
-            
-            <div class="bet-controls">
-                <button class="bet-btn" data-amount="50">50₽</button>
-                <button class="bet-btn active" data-amount="100">100₽</button>
-                <button class="bet-btn" data-amount="200">200₽</button>
-                <button class="bet-btn" data-amount="500">500₽</button>
-            </div>
-            
-            <div class="slot-machine">
-                <div class="reel" id="reel1">
-                    <div class="reel-content">
-                        <div class="reel-item">7</div>
-                        <div class="reel-item">🍒</div>
-                        <div class="reel-item">🍋</div>
-                        <div class="reel-item">🍊</div>
-                        <div class="reel-item">🔔</div>
-                        <div class="reel-item">💎</div>
-                        <div class="reel-item">🍀</div>
-                    </div>
-                </div>
-                
-                <div class="reel" id="reel2">
-                    <div class="reel-content">
-                        <div class="reel-item">7</div>
-                        <div class="reel-item">🍒</div>
-                        <div class="reel-item">🍋</div>
-                        <div class="reel-item">🍊</div>
-                        <div class="reel-item">🔔</div>
-                        <div class="reel-item">💎</div>
-                        <div class="reel-item">🍀</div>
-                    </div>
-                </div>
-                
-                <div class="reel" id="reel3">
-                    <div class="reel-content">
-                        <div class="reel-item">7</div>
-                        <div class="reel-item">🍒</div>
-                        <div class="reel-item">🍋</div>
-                        <div class="reel-item">🍊</div>
-                        <div class="reel-item">🔔</div>
-                        <div class="reel-item">💎</div>
-                        <div class="reel-item">🍀</div>
-                    </div>
-                </div>
-                
-                <div class="lever" id="lever"></div>
-            </div>
-            
-            <button class="spin-btn" id="spin-btn">КРУТИТЬ</button>
-            
-            <div class="result" id="result"></div>
-        </div>
-    </div>
-    
-    <div id="particles"></div>
-    
-    <script src="js/main.js"></script>
+  <img src="https://png.pngtree.com/png-vector/20240813/ourmid/pngtree-3d-merry-christmas-cartoon-character-santa-claus-png-image_13469615.png" alt="Санта" class="santa">
+  <h1>Испытай удачу</h1>
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const partnerLink = "YOUR_OFFER_LINK_HERE"; // ← ЗАМЕНИ НА СВОЙ ОФФЕР
+    let starsCount = 0;
+    const totalNeeded = 3;
+
+    const grid = document.getElementById('grid');
+    const chests = [];
+
+    // Создаём 9 сундуков
+    for (let i = 0; i < 9; i++) {
+      const chest = document.createElement('div');
+      chest.className = 'chest';
+      chest.dataset.index = i;
+      chests.push(chest);
+
+      chest.addEventListener('click', () => {
+        if (starsCount >= totalNeeded) return;
+
+        // Меняем сундук на звезду
+        chest.className = 'star';
+        starsCount++;
+
+        // Если набрали 3 звезды — редирект
+        if (starsCount === totalNeeded) {
+          document.body.style.opacity = '0';
+          document.body.style.transition = 'opacity 0.4s';
+          setTimeout(() => {
+            window.location.href = partnerLink;
+          }, 400);
+        }
+      });
+
+      grid.appendChild(chest);
+    }
+  </script>
 </body>
 </html>
