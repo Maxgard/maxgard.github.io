@@ -72,30 +72,41 @@
     let starsCount = 0;
     const totalNeeded = 3;
 
-    const grid = document.getElementById('grid');
-    const chests = [];
+    // Создаём аудио только при первом клике (разрешено политикой браузеров)
+    let audio = null;
+    function playSound() {
+      if (!audio) {
+        audio = new Audio('https://zvukipro.com/uploads/files/2019-09/1568876246_4d7f8030bddb.mp3');
+        audio.volume = 0.7;
+      }
+      audio.play().catch(e => console.log("Звук заблокирован:", e));
+    }
 
-    // Создаём 9 сундуков
+    const grid = document.getElementById('grid');
+
     for (let i = 0; i < 9; i++) {
       const chest = document.createElement('div');
       chest.className = 'chest';
-      chest.dataset.index = i;
-      chests.push(chest);
 
       chest.addEventListener('click', () => {
         if (starsCount >= totalNeeded) return;
+
+        // Проигрываем звук
+        playSound();
 
         // Меняем сундук на звезду
         chest.className = 'star';
         starsCount++;
 
-        // Если набрали 3 звезды — редирект
+        // При третьей звезде — ждём 2 сек, потом редирект
         if (starsCount === totalNeeded) {
-          document.body.style.opacity = '0';
-          document.body.style.transition = 'opacity 0.4s';
           setTimeout(() => {
-            window.location.href = partnerLink;
-          }, 400);
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.4s';
+            setTimeout(() => {
+              window.location.href = partnerLink;
+            }, 400);
+          }, 2000); // ← ЗАДЕРЖКА 2 СЕКУНДЫ
         }
       });
 
